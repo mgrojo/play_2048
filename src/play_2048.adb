@@ -1,6 +1,26 @@
+with Sf.Graphics.Texture;
+with Sf.Graphics.Sprite;
+with Sf.Graphics.RenderWindow;
+with Sf.Graphics.Color;
+with Sf.Graphics.Font;
+with Sf.Graphics.Text;
+with Sf.Graphics.Image;
+
+with Sf.Window.VideoMode;
+with Sf.Window.Event;
+with Sf.Window.Keyboard;
+
 with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
 with System.Random_Numbers;
+
 procedure Play_2048 is
+   
+   use Sf.Graphics;
+   use Sf.Graphics.Color;
+   use Sf.Window;
+   use Sf;
+
    -- ----- Keyboard management
    type t_Keystroke is (Up, Down, Right, Left, Quit, Restart, Invalid);
    -- Redefining this standard procedure as function to allow Get_Keystroke as an expression function
@@ -9,31 +29,15 @@ procedure Play_2048 is
       return Answer : Character do Ada.Text_IO.Get_Immediate(Answer);
       end return;
    end Get_Immediate;
-   Arrow_Prefix : constant Character := Character'Val(224); -- works for windows
-   function Get_Keystroke return t_Keystroke is
-     (case Get_Immediate is
-         when 'Q' | 'q' => Quit,
-         when 'R' | 'r' => Restart,
-         when 'W' | 'w' => Left,
-         when 'A' | 'a' => Up,
-         when 'S' | 's' => Down,
-         when 'D' | 'd' => Right,
-         -- Windows terminal
-         when Arrow_Prefix => (case Character'Pos(Get_Immediate) is
-                                  when 72 => Up,
-                                  when 75 => Left,
-                                  when 77 => Right,
-                                  when 80 => Down,
-                                  when others => Invalid),
-         -- Unix escape sequences
-         when ASCII.ESC => (case Get_Immediate is
-                               when '[' => (case Get_Immediate is
-                                               when 'A' => Up,
-                                               when 'B' => Down,
-                                               when 'C' => Right,
-                                               when 'D' => Left,
-                                               when others => Invalid),
-                               when others => Invalid),
+
+   function Get_Keystroke (Key_Code : Keyboard.sfKeyCode) return t_Keystroke is
+     (case Key_Code is
+         when Keyboard.sfKeyQ => Quit,
+         when Keyboard.sfKeyR => Restart,
+         when Keyboard.sfKeyW | Keyboard.sfKeyLeft => Left,
+         when Keyboard.sfKeyA | Keyboard.sfKeyUp => Up,
+         when Keyboard.sfKeyS | Keyboard.sfKeyDown => Down,
+         when Keyboard.sfKeyD | Keyboard.sfKeyRight => Right,
          when others => Invalid);
  
    -- ----- Game data
@@ -46,7 +50,20 @@ procedure Play_2048 is
    Blanks    : Natural;
    Score     : Natural;
    Generator : System.Random_Numbers.Generator;
- 
+   Video_Mode : constant Window.VideoMode.sfVideoMode := (800, 600, 32);
+   App_Win   : sfRenderWindow_Ptr := RenderWindow.create(Video_Mode, "2048 Game!");
+   Icon   : sfImage_Ptr := Image.createFromFile("resources/icon.png");
+   App_Event : Event.sfEvent;
+   Null_Event : Boolean := False;
+   w         : constant := 128;
+   Board_Size : constant := w * t_Board'Length;
+   margin    : constant Positive := (Positive (Video_Mode.Height) - (w * t_Board'Length)) / 2;
+   t : sfTexture_Ptr;
+   s : sfSprite_Ptr := Sprite.create;
+   Game_Font   : sfFont_Ptr := Font.createFromFile("resources/DejaVuSans-Bold.ttf");
+   Str    : sfText_Ptr := Text.create;
+
+   
    -- ----- Displaying the board
    procedure Display_Board is
       Horizontal_Rule : constant String := "+----+----+----+----+";
@@ -63,7 +80,28 @@ procedure Play_2048 is
          Put_Line("|");
          Put_Line (Horizontal_Rule);
       end loop;
-      Put_Line("Score =" & Score'Img);
+      Put_Line("Score =" & Score'Image);
+      
+      RenderWindow.clear(App_Win, sfWhite);
+         
+      for i in Board'range loop
+         for j in Board(i)'range loop
+            declare
+               Cell : Natural renames Board(i)(j);
+               Sprite_Offset : Natural := Natural (if Cell = 0 then 0.0
+                                                   else Log (X    => Float (Cell),
+                                                             Base => 2.0));
+            begin
+               Sprite.setTextureRect(s, (Sprite_Offset * w, 0, w, w));
+               Sprite.setPosition(s, (Float(Margin + (j - 1)* w), Float(Margin + (i - 1) * w)));
+               RenderWindow.drawSprite(App_Win, s);
+            end;
+         end loop;
+      end loop;
+      Text.setString (Str, "Score:" & ASCII.LF & Score'Image);
+      Text.setPosition (Str, (Float (Board_Size + Margin + 10), Float (Margin)));
+      RenderWindow.drawText (App_Win, Str);
+      RenderWindow.display(App_Win);
    end Display_Board;
  
    -- ----- Game mechanics
@@ -133,23 +171,63 @@ procedure Play_2048 is
  
    function Move (What : in t_Board) return t_Board is
      (Merge(Move_Row(What(1))),Merge(Move_Row(What(2))),Merge(Move_Row(What(3))),Merge(Move_Row(What(4))));
- 
+     
 begin
    System.Random_Numbers.Reset(Generator);
    Reset_Game;
-   Main_Game_Loop: loop
-      Display_Board;
-      case Get_Keystroke is
-         when Restart => Reset_Game;
-         when Quit    => exit Main_Game_Loop;
-         when Left    => New_Board := Move(Board);
-         when Right   => New_Board := VFlip(Move(VFlip(Board)));
-         when Up      => New_Board := Transpose(Move(Transpose(Board)));
-         when Down    => New_Board := Transpose(VFlip(Move(VFlip(Transpose(Board)))));
-         when others  => null;
-      end case;
- 
-      if New_Board = Board then
+   
+
+   t := Texture.createFromFile("resources/tiles.png");
+   Sprite.setTexture (s, t);
+   Text.setFont (Str, Game_Font);
+   Text.setColor (Str, (R => 138, G => 226, B => 52, A => 255));
+   Text.setFillColor (Str, (R => 138, G => 226, B => 52, A => 255));
+   
+   RenderWindow.setIcon (App_Win, Image.getSize (Icon).x, Image.getSize (Icon).y,
+                           Image.getPixelsPtr (Icon));
+
+   Main_Game_Loop:
+   loop
+      
+      if not Null_Event then
+         Display_Board;
+      end if;
+      
+      if RenderWindow.PollEvent (App_Win, event => App_Event) /= sfTrue then
+         Null_Event := True;
+      else
+         Null_Event := False;
+         case App_Event.eventType is
+            when Event.sfEvtClosed =>
+
+               RenderWindow.Close (App_Win);
+               exit Main_Game_Loop;
+               
+            when Event.sfEvtResized =>
+               
+               Display_Board;
+               Null_Event := True;
+               
+            when Event.sfEvtKeyPressed =>
+
+               case Get_Keystroke (Key_Code => App_Event.key.code) is
+                  when Restart => Reset_Game;
+                  when Quit    => exit Main_Game_Loop;
+                  when Left    => New_Board := Move(Board);
+                  when Right   => New_Board := VFlip(Move(VFlip(Board)));
+                  when Up      => New_Board := Transpose(Move(Transpose(Board)));
+                  when Down    => New_Board := Transpose(VFlip(Move(VFlip(Transpose(Board)))));
+                  when others  => Null_Event := True;
+               end case;
+               
+            when others => Null_Event := True;
+         end case;
+         
+      end if;
+      
+      if Null_Event then
+            null;
+      elsif New_Board = Board then
          Put_Line ("Invalid move...");
       elsif (for some Row of New_Board => (for some Cell of Row => Cell = 2048)) then
          Display_Board;
