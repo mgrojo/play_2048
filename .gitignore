@@ -2,3 +2,5 @@
 *.ali
 *.o
 obj/
+alire/
+alire.lock
