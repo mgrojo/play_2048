@@ -4,3 +4,4 @@
 obj/
 alire/
 alire.lock
+.env

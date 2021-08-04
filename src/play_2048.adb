@@ -16,6 +16,8 @@ with Ada.Command_Line;
 
 with System.Random_Numbers;
 
+with Storage;
+
 procedure Play_2048 is
 
    use Sf.Graphics;
@@ -241,6 +243,8 @@ begin
       height => Image.getSize (Icon).y,
       pixels => Image.getPixelsPtr (Icon));
 
+   Best := Storage.Best_Score;
+
    Main_Loop:
    loop
 
@@ -312,4 +316,8 @@ begin
          end if;
       end loop Game_Loop;
    end loop Main_Loop;
+
+   Storage.Save_State
+     (Best_Score => Best);
+
 end Play_2048;

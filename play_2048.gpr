@@ -1,6 +1,7 @@
 -- begin auto-gpr-with --
 --  This section was automatically added by Alire
 with "asfml.gpr";
+with "dotenv.gpr";
 -- end auto-gpr-with --
 
 project Play_2048 is

@@ -14,3 +14,6 @@ executables = ["play_2048"]
 
 [[depends-on]]  # This line was added by `alr with`
 asfml = "^2.5.0"  # This line was added by `alr with`
+
+[[depends-on]]  # This line was added by `alr with`
+dotenv = "^1.0.0"  # This line was added by `alr with`
