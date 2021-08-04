@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   sodipodi:docname="tiles.svg"
+   inkscape:export-filename="/home/mgr/src/github/mgrojo/2048-Game/src/resources/tiles.png"
+   inkscape:export-xdpi="89.040001"
+   inkscape:export-ydpi="89.040001">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.9899495"
+     inkscape:cx="382.56261"
+     inkscape:cy="883.50353"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1052"
+     inkscape:window-x="1366"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#babdb6;fill-opacity:1;fill-rule:evenodd;stroke:#f3fff3;stroke-width:2.64583325;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:markers fill stroke;enable-background:accumulate"
+       d="m -187.77809,53.040418 c -5.9e-4,0 -0.001,0.198747 -0.001,0.445449 v 32.975767 c 0,0.246716 4.4e-4,0.44545 0.001,0.44545 h 33.86478 c 5.8e-4,0 0.001,-0.198734 0.001,-0.44545 V 53.485867 c 0,-0.246702 -4.5e-4,-0.445449 -0.001,-0.445449 z"
+       id="rect815"
+       inkscape:connector-curvature="0" />
+    <path
+       inkscape:connector-curvature="0"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#888a85;fill-opacity:1;fill-rule:evenodd;stroke:#f3fff3;stroke-width:2.64583325;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       d="m -151.26546,53.040418 c -5.3e-4,0 -0.001,0.198747 -0.001,0.44545 v 32.975767 c 0,0.246716 5.3e-4,0.44545 0.001,0.44545 h 33.8648 c 5.3e-4,0 0.001,-0.198734 0.001,-0.44545 V 53.485868 c 0,-0.246703 -5.3e-4,-0.44545 -0.001,-0.44545 z"
+       id="rect815-3" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;line-height:0%;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-138.21602"
+       y="74.162987"
+       id="text849"><tspan
+         sodipodi:role="line"
+         id="tspan847"
+         x="-138.21602"
+         y="74.162987"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke-width:0.26458332px">2</tspan></text>
+    <path
+       inkscape:connector-curvature="0"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#2e3436;fill-opacity:1;fill-rule:evenodd;stroke:#f3fff3;stroke-width:2.64583325;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       d="m -114.75281,52.945924 c -5.3e-4,0 -0.001,0.198747 -0.001,0.44545 V 86.36714 c 0,0.246716 5.3e-4,0.44545 0.001,0.44545 h 33.864689 c 5.3e-4,0 0.001,-0.198734 0.001,-0.44545 V 53.391374 c 0,-0.246703 -5.3e-4,-0.44545 -0.001,-0.44545 z"
+       id="rect815-3-1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;line-height:0%;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-101.74232"
+       y="73.99408"
+       id="text849-2"><tspan
+         sodipodi:role="line"
+         id="tspan847-1"
+         x="-101.74232"
+         y="73.99408"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke-width:0.26458332px">4</tspan></text>
+    <path
+       inkscape:connector-curvature="0"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#8ae234;fill-opacity:1;fill-rule:evenodd;stroke:#f3fff3;stroke-width:2.64583325;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       d="m -78.240288,53.040418 c -5.3e-4,0 -10e-4,0.198747 -10e-4,0.44545 v 32.975767 c 0,0.246716 5.3e-4,0.44545 10e-4,0.44545 h 33.864609 c 5.3e-4,0 10e-4,-0.198734 10e-4,-0.44545 V 53.485868 c 0,-0.246703 -5.3e-4,-0.44545 -10e-4,-0.44545 z"
+       id="rect815-3-1-2" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;line-height:0%;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-65.229889"
+       y="74.083061"
+       id="text849-2-0"><tspan
+         sodipodi:role="line"
+         id="tspan847-1-6"
+         x="-65.229889"
+         y="74.083061"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke-width:0.26458332px">8</tspan></text>
+    <path
+       inkscape:connector-curvature="0"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#4e9a06;fill-opacity:1;fill-rule:evenodd;stroke:#f3fff3;stroke-width:2.64583325;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       d="m -41.727844,53.040418 c -5.3e-4,0 -0.001,0.198747 -0.001,0.44545 v 32.975767 c 0,0.246716 5.3e-4,0.44545 0.001,0.44545 h 33.8645264 c 5.3e-4,0 0.001,-0.198734 0.001,-0.44545 V 53.485868 c 0,-0.246703 -5.3e-4,-0.44545 -0.001,-0.44545 z"
+       id="rect815-3-1-2-3" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;line-height:0%;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-32.98386"
+       y="74.077553"
+       id="text849-2-0-6"><tspan
+         sodipodi:role="line"
+         id="tspan847-1-6-1"
+         x="-32.98386"
+         y="74.077553"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke-width:0.26458332px">16</tspan></text>
+    <path
+       inkscape:connector-curvature="0"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#fcaf3e;fill-opacity:1;fill-rule:evenodd;stroke:#f3fff3;stroke-width:2.64583325;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       d="m -5.2154941,53.040418 c -5.3e-4,0 -0.001,0.198747 -0.001,0.44545 v 32.975767 c 0,0.246716 5.3e-4,0.44545 0.001,0.44545 H 28.648905 c 5.3e-4,0 0.001,-0.198734 0.001,-0.44545 V 53.485868 c 0,-0.246703 -5.3e-4,-0.44545 -0.001,-0.44545 z"
+       id="rect815-3-1-2-0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;line-height:0%;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="3.9750633"
+       y="74.083061"
+       id="text849-2-0-5"><tspan
+         sodipodi:role="line"
+         id="tspan847-1-6-7"
+         x="3.9750633"
+         y="74.083061"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke-width:0.26458332px">32</tspan></text>
+    <path
+       inkscape:connector-curvature="0"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#ce5c00;fill-opacity:1;fill-rule:evenodd;stroke:#f3fff3;stroke-width:2.64583325;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       d="m 31.29672,53.040418 c -5.3e-4,0 -0.001,0.198747 -0.001,0.44545 v 32.975766 c 0,0.246716 5.3e-4,0.44545 0.001,0.44545 h 33.864418 c 5.3e-4,0 0.001,-0.198734 0.001,-0.44545 V 53.485868 c 0,-0.246703 -5.3e-4,-0.44545 -0.001,-0.44545 z"
+       id="rect815-3-1-2-3-2" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;line-height:0%;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="40.284042"
+       y="74.077545"
+       id="text849-2-0-6-0"><tspan
+         sodipodi:role="line"
+         id="tspan847-1-6-1-0"
+         x="40.284042"
+         y="74.077545"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke-width:0.26458332px">64</tspan></text>
+    <path
+       inkscape:connector-curvature="0"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#729fcf;fill-opacity:1;fill-rule:evenodd;stroke:#f3fff3;stroke-width:2.64583325;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       d="m 67.808963,53.040418 c -5.3e-4,0 -0.001,0.198747 -0.001,0.44545 v 32.975767 c 0,0.246716 5.3e-4,0.44545 0.001,0.44545 h 33.864417 c 5.3e-4,0 0.001,-0.198734 0.001,-0.44545 V 53.485868 c 0,-0.246703 -5.3e-4,-0.44545 -0.001,-0.44545 z"
+       id="rect815-3-1-2-0-3" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;line-height:0%;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="72.673897"
+       y="74.083061"
+       id="text849-2-0-5-4"><tspan
+         sodipodi:role="line"
+         id="tspan847-1-6-7-2"
+         x="72.673897"
+         y="74.083061"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke-width:0.26458332px">128</tspan></text>
+    <path
+       inkscape:connector-curvature="0"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#204a87;fill-opacity:1;fill-rule:evenodd;stroke:#f3fff3;stroke-width:2.64583325;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       d="m 104.32121,53.040418 c -5.3e-4,0 -10e-4,0.198747 -10e-4,0.44545 v 32.975768 c 0,0.24671 5.3e-4,0.44545 10e-4,0.44545 h 33.86462 c 5.3e-4,0 10e-4,-0.19874 10e-4,-0.44545 V 53.485868 c 0,-0.246703 -5.3e-4,-0.44545 -10e-4,-0.44545 z"
+       id="rect815-3-1-2-3-2-4" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;line-height:0%;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="109.33018"
+       y="74.083061"
+       id="text849-2-0-6-0-5"><tspan
+         sodipodi:role="line"
+         id="tspan847-1-6-1-0-3"
+         x="109.33018"
+         y="74.083061"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke-width:0.26458332px">256</tspan></text>
+    <path
+       inkscape:connector-curvature="0"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#ad7fa8;fill-opacity:1;fill-rule:evenodd;stroke:#f3fff3;stroke-width:2.64583325;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       d="m 140.83366,53.040418 c -5.3e-4,0 -0.001,0.198747 -0.001,0.44545 v 32.97577 c 0,0.24671 5.3e-4,0.44545 0.001,0.44545 h 33.8646 c 5.3e-4,0 0.001,-0.19874 0.001,-0.44545 v -32.97577 c 0,-0.246703 -5.3e-4,-0.44545 -0.001,-0.44545 z"
+       id="rect815-3-1-2-0-3-1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;line-height:0%;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="146.04092"
+       y="74.083061"
+       id="text849-2-0-5-4-1"><tspan
+         sodipodi:role="line"
+         id="tspan847-1-6-7-2-3"
+         x="146.04092"
+         y="74.083061"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke-width:0.26458332px">512</tspan></text>
+    <path
+       inkscape:connector-curvature="0"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#75507b;fill-opacity:1;fill-rule:evenodd;stroke:#f3fff3;stroke-width:2.64583325;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       d="m 177.3461,53.040424 c -5.3e-4,0 -0.001,0.198747 -0.001,0.44545 v 32.97577 c 0,0.24671 5.3e-4,0.44545 0.001,0.44545 h 33.86462 c 5.2e-4,0 0.001,-0.19874 0.001,-0.44545 v -32.97577 c 0,-0.246703 -5.3e-4,-0.44545 -0.001,-0.44545 z"
+       id="rect815-3-1-2-3-2-4-1" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;line-height:0%;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="178.19235"
+       y="74.083069"
+       id="text849-2-0-6-0-5-5"><tspan
+         sodipodi:role="line"
+         id="tspan847-1-6-1-0-3-8"
+         x="178.19235"
+         y="74.083069"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke-width:0.26458332px">1024</tspan></text>
+    <path
+       inkscape:connector-curvature="0"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#800000;fill-opacity:1;fill-rule:evenodd;stroke:#f3fff3;stroke-width:2.64583325;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       d="m 213.85855,53.040418 c -5.3e-4,0 -0.001,0.198747 -0.001,0.445448 v 32.97577 c 0,0.24671 5.3e-4,0.44545 0.001,0.44545 h 33.86462 c 5.3e-4,0 10e-4,-0.19874 10e-4,-0.44545 v -32.97577 c 0,-0.246701 -5.3e-4,-0.445448 -10e-4,-0.445448 z"
+       id="rect815-3-1-2-3-2-4-1-1"
+       inkscape:export-filename="/home/mgr/src/github/mgrojo/2048-Game/src/resources/icon.png"
+       inkscape:export-xdpi="89"
+       inkscape:export-ydpi="89" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;line-height:0%;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="214.98476"
+       y="74.083061"
+       id="text849-2-0-6-0-5-5-3"
+       inkscape:export-filename="/home/mgr/src/github/mgrojo/2048-Game/src/resources/icon.png"
+       inkscape:export-xdpi="89"
+       inkscape:export-ydpi="89"><tspan
+         sodipodi:role="line"
+         id="tspan847-1-6-1-0-3-8-3"
+         x="214.98476"
+         y="74.083061"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:11.28888893px;font-family:'Verana Sans Demi';-inkscape-font-specification:'Verana Sans Demi, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#eeeeec;fill-opacity:1;stroke-width:0.26458332px">2048</tspan></text>
+  </g>
+</svg>

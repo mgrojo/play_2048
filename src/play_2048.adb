@@ -46,6 +46,7 @@ procedure Play_2048 is
    New_Board  : t_Board;
    Blanks     : Natural;
    Score      : Natural;
+   Best       : Natural := 0;
    Generator  : System.Random_Numbers.Generator;
    Video_Mode : constant Window.VideoMode.sfVideoMode := (800, 600, 32);
    App_Win    : sfRenderWindow_Ptr := RenderWindow.create(Video_Mode, "2048 Game!");
@@ -55,14 +56,35 @@ procedure Play_2048 is
    Tiles      : constant sfTexture_Ptr := Texture.createFromFile("resources/tiles.png");
    Tile_Size  : constant Positive := Positive (Texture.getSize (Tiles).y);
    Board_Size : constant Positive := Tile_Size * t_Board'Length;
-   Margin     : constant Positive := (Positive (Video_Mode.Height) - (Tile_Size * t_Board'Length)) / 2;
-   Tile_Spr   : sfSprite_Ptr := Sprite.create;
+   Margin     : constant Positive := (Positive (Video_Mode.Height) - Board_Size) / 2;
+   Tile_Sprite : sfSprite_Ptr := Sprite.create;
+   Game_Sprite : sfSprite_Ptr := Sprite.create;
+   Game_Image : sfTexture_Ptr := Texture.createFromImage (Icon);
    Game_Font  : sfFont_Ptr := Font.createFromFile("resources/DejaVuSans-Bold.ttf");
-   Str        : sfText_Ptr := Text.create;
+   Score_Text : sfText_Ptr := Text.create;
+   Best_Text  : sfText_Ptr := Text.create;
+   Game_Text  : sfText_Ptr := Text.create;
    Text_UI    : Boolean := False;
 
+
+   procedure Display_Text (Message : String) is
+      Board_Center : constant Float := Float (Margin + Board_Size / 2);
+
+   begin
+      if Text_UI then
+         Put_Line (Message);
+      end if;
+
+      Text.setString (Game_Text, Message);
+      Text.setPosition (Game_Text,
+                        (x => Board_Center - Text.getLocalBounds (Game_Text).width / 2.0,
+                         y => Board_Center - Text.getLocalBounds (Game_Text).height / 2.0));
+      RenderWindow.drawText (App_Win, Game_Text);
+
+   end Display_Text;
+
    -- ----- Displaying the board
-   procedure Display_Board is
+   procedure Display_Board (Message : String := "") is
       Horizontal_Rule : constant String := "+----+----+----+----+";
       function Center (Value : in String) return String is
         ((1..(2-(Value'Length-1)/2) => ' ') & -- Add leading spaces
@@ -78,7 +100,7 @@ procedure Play_2048 is
             Put_Line("|");
             Put_Line (Horizontal_Rule);
          end loop;
-         Put_Line("Score =" & Score'Image);
+         Put_Line("Score =" & Score'Image & "  Best Score =" & Best'Image);
       end if;
 
       RenderWindow.clear(App_Win, sfWhite);
@@ -91,21 +113,43 @@ procedure Play_2048 is
                                                    else Log (X    => Float (Cell),
                                                              Base => 2.0));
             begin
-               Sprite.setTextureRect(Tile_Spr, (Sprite_Offset * Tile_Size, 0, Tile_Size, Tile_Size));
-               Sprite.setPosition(Tile_Spr, (Float(Margin + (j - 1) * Tile_Size),
-                                             Float(Margin + (i - 1) * Tile_Size)));
-               RenderWindow.drawSprite(App_Win, Tile_Spr);
+               Sprite.setTextureRect(Tile_Sprite, (Sprite_Offset * Tile_Size, 0, Tile_Size, Tile_Size));
+               Sprite.setPosition(Tile_Sprite, (x => Float(Margin + (j - 1) * Tile_Size),
+                                                y => Float(Margin + (i - 1) * Tile_Size)));
+               RenderWindow.drawSprite(App_Win, Tile_Sprite);
             end;
          end loop;
       end loop;
 
-      Text.setString (Str, "Score:" & ASCII.LF & Score'Image);
-      Text.setPosition (Str, (Float (Board_Size + Margin + 10), Float (Margin)));
-      RenderWindow.drawText (App_Win, Str);
+      Text.setString (Score_Text, "Score" & ASCII.LF & Score'Image & ASCII.LF & ASCII.LF &
+                        "Best score" & ASCII.LF & Best'Image);
+      Text.setPosition (Score_Text, (Float (Board_Size + Margin + 10), Float (Margin)));
+      RenderWindow.drawText (App_Win, Score_Text);
+
+      Sprite.setPosition(Game_Sprite,
+                         (x => Float (Margin + Board_Size +
+                                        (Positive (Video_Mode.Width) - Board_Size - Margin) / 2 -
+                                        Positive (Image.getSize (Icon).x) / 2),
+                          y => Float (Positive (Video_Mode.Height) - Margin -
+                                        Positive (Image.getSize (Icon).y))));
+      RenderWindow.drawSprite(App_Win, Game_Sprite);
+
+      if Message /= "" then
+         Display_Text(Message);
+      end if;
 
       RenderWindow.display(App_Win);
 
    end Display_Board;
+
+   procedure Set_Text_Style
+     (The_Text : sfText_Ptr) is
+   begin
+      Text.setFont (The_Text, Game_Font);
+      Text.setOutlineColor (The_Text, (R => 32, G => 32, B => 32, A => 255));
+      Text.setFillColor (The_Text, (R => 138, G => 226, B => 52, A => 255));
+      Text.setOutlineThickness (The_Text, 2.5);
+   end Set_Text_Style;
 
    -- ----- Game mechanics
    procedure Add_Block is
@@ -157,6 +201,9 @@ procedure Play_2048 is
    begin
       Blanks := Blanks+1;
       Score  := Score+Delta_Score;
+      if Score > Best then
+         Best := Score;
+      end if;
       return (1 => 0);
    end Add_Blank;
 
@@ -177,15 +224,18 @@ procedure Play_2048 is
 
 begin
    System.Random_Numbers.Reset(Generator);
-   Reset_Game;
 
    Text_UI := Ada.Command_Line.Argument_Count >= 1 and then
      Ada.Command_Line.Argument (1) = "-text";
 
-   Sprite.setTexture (Tile_Spr, Tiles);
-   Text.setFont (Str, Game_Font);
-   Text.setColor (Str, (R => 138, G => 226, B => 52, A => 255));
-   Text.setFillColor (Str, (R => 138, G => 226, B => 52, A => 255));
+   Sprite.setTexture (Tile_Sprite, Tiles);
+   Sprite.setTexture (Game_Sprite, Game_Image);
+
+   Set_Text_Style (Score_Text);
+   Set_Text_Style (Best_Text);
+   Set_Text_Style (Game_Text);
+
+   Text.setCharacterSize (Game_Text, Text.getCharacterSize (Game_Text) * 2);
 
    RenderWindow.setIcon
      (renderWindow => App_Win,
@@ -193,67 +243,75 @@ begin
       height => Image.getSize (Icon).y,
       pixels => Image.getPixelsPtr (Icon));
 
-   Main_Game_Loop:
+   Main_Loop:
    loop
 
-      if not Null_Event then
-         Display_Board;
-      end if;
+      Reset_Game;
 
-      if RenderWindow.PollEvent (App_Win, event => App_Event) /= sfTrue then
-         Null_Event := True;
-      else
-         Null_Event := False;
-         case App_Event.eventType is
-            when Event.sfEvtClosed =>
+      Game_Loop:
+      loop
 
-               RenderWindow.Close (App_Win);
-               exit Main_Game_Loop;
-
-            when Event.sfEvtResized =>
-
-               Display_Board;
-               Null_Event := True;
-
-            when Event.sfEvtKeyPressed =>
-
-               case Get_Keystroke (Key_Code => App_Event.key.code) is
-                  when Restart => Reset_Game;
-                  when Quit    => exit Main_Game_Loop;
-                  when Left    => New_Board := Move(Board);
-                  when Right   => New_Board := VFlip(Move(VFlip(Board)));
-                  when Up      => New_Board := Transpose(Move(Transpose(Board)));
-                  when Down    => New_Board := Transpose(VFlip(Move(VFlip(Transpose(Board)))));
-                  when others  => Null_Event := True;
-               end case;
-
-            when others => Null_Event := True;
-         end case;
-
-      end if;
-
-      if Null_Event then
-            null;
-      elsif New_Board = Board then
-         Put_Line ("Invalid move...");
-      elsif (for some Row of New_Board => (for some Cell of Row => Cell = 2048)) then
-         Display_Board;
-         Put_Line ("Win !");
-         exit Main_Game_Loop;
-      else
-         Board := New_Board;
-         Add_Block; -- OK since the board has changed
-         if Blanks = 0
-            and then (for all Row in 1..4 =>
-                        (for all Column in 1..3 =>
-                             (Board(Row)(Column) /= Board(Row)(Column+1))))
-            and then (for all Row in 1..3 =>
-                        (for all Column in 1..4 =>
-                             (Board(Row)(Column) /= Board(Row+1)(Column)))) then
+         if not Null_Event then
             Display_Board;
-            Put_Line ("Lost !");
-            exit Main_Game_Loop;
          end if;
-      end if;
-   end loop Main_Game_Loop;
+
+         if RenderWindow.waitEvent (App_Win, event => App_Event) /= sfTrue then
+            Null_Event := True;
+         else
+            Null_Event := False;
+            case App_Event.eventType is
+               when Event.sfEvtClosed =>
+
+                  RenderWindow.Close (App_Win);
+                  exit Main_Loop;
+
+               when Event.sfEvtResized =>
+
+                  Display_Board;
+                  Null_Event := True;
+
+               when Event.sfEvtKeyPressed =>
+
+                  case Get_Keystroke (Key_Code => App_Event.key.code) is
+                     when Restart => exit Game_Loop;
+                     when Quit    => exit Main_Loop;
+                     when Left    => New_Board := Move(Board);
+                     when Right   => New_Board := VFlip(Move(VFlip(Board)));
+                     when Up      => New_Board := Transpose(Move(Transpose(Board)));
+                     when Down    => New_Board := Transpose(VFlip(Move(VFlip(Transpose(Board)))));
+                     when others  => Null_Event := True;
+                  end case;
+
+               when others => Null_Event := True;
+            end case;
+
+         end if;
+
+         if Null_Event then
+            null;
+         elsif New_Board = Board then
+            Display_Board (Message => "Invalid move...");
+            Null_Event := True;
+         elsif (for some Row of New_Board => (for some Cell of Row => Cell = 2048)) then
+            Board := New_Board;
+            Display_Board (Message => "You win!");
+            Null_Event := True;
+            exit Game_Loop;
+         else
+            Board := New_Board;
+            Add_Block; -- OK since the board has changed
+            if Blanks = 0
+              and then (for all Row in 1..4 =>
+                          (for all Column in 1..3 =>
+                             (Board(Row)(Column) /= Board(Row)(Column+1))))
+              and then (for all Row in 1..3 =>
+                          (for all Column in 1..4 =>
+                             (Board(Row)(Column) /= Board(Row+1)(Column)))) then
+               Display_Board (Message => "You lose!");
+               Null_Event := True;
+               exit Game_Loop;
+            end if;
+         end if;
+      end loop Game_Loop;
+   end loop Main_Loop;
 end Play_2048;
