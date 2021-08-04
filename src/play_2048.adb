@@ -62,7 +62,6 @@ procedure Play_2048 is
    Game_Image : sfTexture_Ptr := Texture.createFromImage (Icon);
    Game_Font  : sfFont_Ptr := Font.createFromFile("resources/DejaVuSans-Bold.ttf");
    Score_Text : sfText_Ptr := Text.create;
-   Best_Text  : sfText_Ptr := Text.create;
    Game_Text  : sfText_Ptr := Text.create;
    Text_UI    : Boolean := False;
 
@@ -232,7 +231,6 @@ begin
    Sprite.setTexture (Game_Sprite, Game_Image);
 
    Set_Text_Style (Score_Text);
-   Set_Text_Style (Best_Text);
    Set_Text_Style (Game_Text);
 
    Text.setCharacterSize (Game_Text, Text.getCharacterSize (Game_Text) * 2);
