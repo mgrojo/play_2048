@@ -59,6 +59,8 @@ procedure Play_2048 is
    Tile_Size  : constant Positive := Positive (Texture.getSize (Tiles).y);
    Board_Size : constant Positive := Tile_Size * t_Board'Length;
    Margin     : constant Positive := (Positive (Video_Mode.Height) - Board_Size) / 2;
+   Pane_Center : constant Positive := Positive (Video_Mode.Width) -
+     (Positive (Video_Mode.Width) - Board_Size - Margin) / 2;
    Tile_Sprite : sfSprite_Ptr := Sprite.create;
    Game_Sprite : sfSprite_Ptr := Sprite.create;
    Game_Image : sfTexture_Ptr := Texture.createFromImage (Icon);
@@ -66,6 +68,10 @@ procedure Play_2048 is
    Score_Text : sfText_Ptr := Text.create;
    Game_Text  : sfText_Ptr := Text.create;
    Text_UI    : Boolean := False;
+   Help       : constant String :=
+     "R: restart game" & ASCII.LF &
+     "Q: quit game" & ASCII.LF &
+     "Arrows: move";
 
 
    procedure Display_Text (Message : String) is
@@ -124,12 +130,13 @@ procedure Play_2048 is
 
       Text.setString (Score_Text, "Score" & ASCII.LF & Score'Image & ASCII.LF & ASCII.LF &
                         "Best score" & ASCII.LF & Best'Image);
-      Text.setPosition (Score_Text, (Float (Board_Size + Margin + 10), Float (Margin)));
+      Text.setPosition (Score_Text,
+                        (x => Float (Pane_Center) - Text.getLocalBounds (Score_Text).width / 2.0,
+                         y => Float (Margin)));
       RenderWindow.drawText (App_Win, Score_Text);
 
       Sprite.setPosition(Game_Sprite,
-                         (x => Float (Margin + Board_Size +
-                                        (Positive (Video_Mode.Width) - Board_Size - Margin) / 2 -
+                         (x => Float (Pane_Center -
                                         Positive (Image.getSize (Icon).x) / 2),
                           y => Float (Positive (Video_Mode.Height) - Margin -
                                         Positive (Image.getSize (Icon).y))));
@@ -148,8 +155,8 @@ procedure Play_2048 is
    begin
       Text.setFont (The_Text, Game_Font);
       Text.setOutlineColor (The_Text, (R => 32, G => 32, B => 32, A => 255));
-      Text.setFillColor (The_Text, (R => 138, G => 226, B => 52, A => 255));
-      Text.setOutlineThickness (The_Text, 2.5);
+      Text.setFillColor (The_Text, (R => 196, G => 160, B => 0, A => 255));
+      Text.setOutlineThickness (The_Text, 1.0);
    end Set_Text_Style;
 
    -- ----- Game mechanics
@@ -281,7 +288,9 @@ begin
                      when Right   => New_Board := VFlip(Move(VFlip(Board)));
                      when Up      => New_Board := Transpose(Move(Transpose(Board)));
                      when Down    => New_Board := Transpose(VFlip(Move(VFlip(Transpose(Board)))));
-                     when others  => Null_Event := True;
+                     when others  =>
+                        Display_Board (Message => Help);
+                        Null_Event := True;
                   end case;
 
                when others => Null_Event := True;
