@@ -1,7 +1,7 @@
 -- begin auto-gpr-with --
 --  This section was automatically added by Alire
+with "ada_toml.gpr";
 with "asfml.gpr";
-with "dotenv.gpr";
 -- end auto-gpr-with --
 
 project Play_2048 is
@@ -16,6 +16,7 @@ project Play_2048 is
    package Compiler is
       for Default_Switches ("Ada") use
         ("-g",
+         "-gnatQ",
          "-gnatwa",  -- All warnings
          "-gnatVa");  -- All validity checks
    end Compiler;

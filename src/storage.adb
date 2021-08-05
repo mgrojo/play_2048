@@ -1,19 +1,24 @@
 with Ada.Directories;
 with Ada.Text_IO;
-with Ada.Environment_Variables;
+with Ada.Strings.Unbounded;
 
-with Dotenv;
+with TOML.File_IO;
 
 package body Storage is
 
-   package Env renames Ada.Environment_Variables;
+   use TOML;
 
-   Best_Score_Name : constant String := "PLAY_2048_BEST_SCORE";
+   Best_Score_Name : constant String := "best_score";
+   Filename : constant String := "play_2048.toml";
+
+   Config : TOML_Value;
 
    function Best_Score return Natural is
    begin
-      if Env.Exists (Best_Score_Name) then
-         return Natural'Value (Env.Value (Best_Score_Name));
+      if Config /= No_TOML_Value and then
+        Config.Has (Key => Best_Score_Name) then
+
+         return Natural (Config.Get (Best_Score_Name).As_Integer);
       else
          return 0;
       end if;
@@ -21,8 +26,8 @@ package body Storage is
    exception
       when Constraint_Error =>
 
-         Ada.Text_IO.Put_Line(Ada.Text_IO.Standard_Error,
-                              "Error: invalid format for env var " &
+         Ada.Text_IO.Put_Line (Ada.Text_IO.Standard_Error,
+                              "Error: invalid format for " &
                                 Best_Score_Name);
          return 0;
    end Best_Score;
@@ -34,20 +39,44 @@ package body Storage is
    begin
 
       begin
-         Ada.Text_IO.Open (File, Ada.Text_IO.Out_File, Dotenv.DEFAULT_FILENAME);
+         Ada.Text_IO.Open (File, Ada.Text_IO.Out_File, Filename);
       exception
          when Ada.Text_IO.Name_Error =>
             Ada.Text_IO.Create
-              (File, Ada.Text_IO.Out_File, Dotenv.DEFAULT_FILENAME);
+              (File, Ada.Text_IO.Out_File, Filename);
       end;
 
-      Ada.Text_IO.Put_Line (File, Best_Score_Name & "=" & Best_Score'Image);
+      if Config = No_TOML_Value then
+         Config := Create_Table;
+      end if;
+
+      Config.Set (Key => Best_Score_Name,
+                  Entry_Value => Create_Integer (Any_Integer (Best_Score)));
+
+      TOML.File_IO.Dump_To_File (Config, File);
+
       Ada.Text_IO.Close (File);
 
    end Save_State;
 
 begin
-   if Ada.Directories.Exists (Dotenv.DEFAULT_FILENAME) then
-      Dotenv.Config;
+   if Ada.Directories.Exists (Filename) then
+
+      declare
+         Result : constant TOML.Read_Result :=
+           TOML.File_IO.Load_File (Filename);
+      begin
+         if Result.Success then
+            Config := Result.Value;
+         else
+            Ada.Text_IO.Put (Ada.Text_IO.Standard_Error,
+                             "Error: while loading " & Filename & ": ");
+            Ada.Text_IO.Put_Line
+              (Ada.Text_IO.Standard_Error,
+               Ada.Strings.Unbounded.To_String (Result.Message));
+         end if;
+      end;
+
    end if;
+
 end Storage;
