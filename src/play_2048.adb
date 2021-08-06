@@ -9,6 +9,7 @@ with Sf.Graphics.Image;
 with Sf.Window.VideoMode;
 with Sf.Window.Event;
 with Sf.Window.Keyboard;
+with Sf.Window.Window;
 
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
@@ -26,17 +27,19 @@ procedure Play_2048 is
    use Sf;
 
    -- ----- Keyboard management
-   type t_Keystroke is (Up, Down, Right, Left, Quit, Restart, Invalid);
+   type t_Keystroke is (Up, Down, Right, Left, Quit, Restart, Fullscreen_On_Off, Invalid);
 
    function Get_Keystroke (Key_Code : Keyboard.sfKeyCode) return t_Keystroke is
      (case Key_Code is
          when Keyboard.sfKeyQ => Quit,
          when Keyboard.sfKeyR => Restart,
+         when Keyboard.sfKeyF11 => Fullscreen_On_Off,
          when Keyboard.sfKeyW | Keyboard.sfKeyLeft => Left,
          when Keyboard.sfKeyA | Keyboard.sfKeyUp => Up,
          when Keyboard.sfKeyS | Keyboard.sfKeyDown => Down,
          when Keyboard.sfKeyD | Keyboard.sfKeyRight => Right,
          when others => Invalid);
+
 
    -- ----- Game data
    function Random_Int is new System.Random_Numbers.Random_Discrete(Integer);
@@ -50,12 +53,13 @@ procedure Play_2048 is
    Score      : Natural;
    Best       : Natural := 0;
    Generator  : System.Random_Numbers.Generator;
-   Video_Mode : constant Window.VideoMode.sfVideoMode := (800, 600, 32);
-   App_Win    : sfRenderWindow_Ptr := RenderWindow.create(Video_Mode, "2048 Game!");
-   Icon       : sfImage_Ptr := Image.createFromFile("resources/icon.png");
+   Video_Mode : constant VideoMode.sfVideoMode := (800, 600, 32);
+   App_Win    : SfRenderWindow_Ptr;
+   Icon       : sfImage_Ptr := Image.createFromFile ("resources/icon.png");
    App_Event  : Event.sfEvent;
    Null_Event : Boolean := False;
-   Tiles      : constant sfTexture_Ptr := Texture.createFromFile("resources/tiles.png");
+   Tiles      : constant sfTexture_Ptr :=
+     Texture.createFromFile ("resources/tiles.png");
    Tile_Size  : constant Positive := Positive (Texture.getSize (Tiles).y);
    Board_Size : constant Positive := Tile_Size * t_Board'Length;
    Margin     : constant Positive := (Positive (Video_Mode.Height) - Board_Size) / 2;
@@ -69,10 +73,19 @@ procedure Play_2048 is
    Game_Text  : sfText_Ptr := Text.create;
    Text_UI    : Boolean := False;
    Help       : constant String :=
+     "Arrows: move" & ASCII.LF &
      "R: restart game" & ASCII.LF &
      "Q: quit game" & ASCII.LF &
-     "Arrows: move";
+     "F11: fullscreen";
+   Fullscreen : Boolean := Storage.Fullscreen_Mode;
 
+
+   function Create_Window return SfRenderWindow_Ptr is
+      (RenderWindow.create
+	(mode  => Video_Mode,
+	 title => "2048 Game!",
+	 style => (if Fullscreen then Sf.Window.Window.sfFullscreen
+	           else Sf.Window.Window.sfDefaultStyle)));
 
    procedure Display_Text (Message : String) is
       Board_Center : constant Float := Float (Margin + Board_Size / 2);
@@ -236,6 +249,8 @@ begin
    Text_UI := Ada.Command_Line.Argument_Count >= 1 and then
      Ada.Command_Line.Argument (1) = "-text";
 
+   App_Win := Create_Window;
+
    Sprite.setTexture (Tile_Sprite, Tiles);
    Sprite.setTexture (Game_Sprite, Game_Image);
 
@@ -288,6 +303,15 @@ begin
                      when Right   => New_Board := VFlip(Move(VFlip(Board)));
                      when Up      => New_Board := Transpose(Move(Transpose(Board)));
                      when Down    => New_Board := Transpose(VFlip(Move(VFlip(Transpose(Board)))));
+                     when Fullscreen_On_Off =>
+
+                        Fullscreen := not Fullscreen;
+                        RenderWindow.destroy (App_Win);
+                        App_Win := Create_Window;
+
+                        Display_Board;
+                        Null_Event := True;
+
                      when others  =>
                         Display_Board (Message => Help);
                         Null_Event := True;
@@ -327,6 +351,13 @@ begin
    end loop Main_Loop;
 
    Storage.Save_State
-     (Best_Score => Best);
+     (Best_Score => Best,
+      Fullscreen_Mode => Fullscreen);
 
+   RenderWindow.destroy (App_Win);
+
+exception
+   when others =>
+      RenderWindow.destroy (App_Win);
+      raise;
 end Play_2048;

@@ -9,6 +9,7 @@ package body Storage is
    use TOML;
 
    Best_Score_Name : constant String := "best_score";
+   Fullscreen_Mode_Name : constant String := "fullscreen_mode";
    Filename : constant String := "play_2048.toml";
 
    Config : TOML_Value;
@@ -32,8 +33,30 @@ package body Storage is
          return 0;
    end Best_Score;
 
+
+   function Fullscreen_Mode return Boolean is
+      Default : constant Boolean := False;
+   begin
+      if Config /= No_TOML_Value and then
+        Config.Has (Key => Fullscreen_Mode_Name) then
+
+         return Config.Get (Fullscreen_Mode_Name).As_Boolean;
+      else
+         return Default;
+      end if;
+
+   exception
+      when others =>
+
+         Ada.Text_IO.Put_Line (Ada.Text_IO.Standard_Error,
+                              "Error: invalid format for " &
+                                Fullscreen_Mode_Name);
+         return Default;
+   end Fullscreen_Mode;
+
    procedure Save_State
-     (Best_Score : Natural) is
+     (Best_Score : Natural;
+      Fullscreen_Mode : Boolean) is
 
       File : Ada.Text_IO.File_Type;
    begin
@@ -52,6 +75,9 @@ package body Storage is
 
       Config.Set (Key => Best_Score_Name,
                   Entry_Value => Create_Integer (Any_Integer (Best_Score)));
+
+      Config.Set (Key => Fullscreen_Mode_Name,
+                  Entry_Value => Create_Boolean (Fullscreen_Mode));
 
       TOML.File_IO.Dump_To_File (Config, File);
 

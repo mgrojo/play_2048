@@ -16,6 +16,7 @@ Keys:
 - R - restart game
 - Q - quit game
 - Arrow keys - move tiles
+- F11 - toggle fullscreen mode
 
 # Attribution
 
