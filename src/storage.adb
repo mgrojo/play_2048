@@ -8,39 +8,52 @@ package body Storage is
 
    use TOML;
 
-   Best_Score_Name : constant String := "best_score";
-   Fullscreen_Mode_Name : constant String := "fullscreen_mode";
+   Best_Score_Key : constant String := "best_score";
+   Fullscreen_Mode_Key : constant String := "fullscreen_mode";
+   Theme_Key : constant String := "theme_id";
    Filename : constant String := "play_2048.toml";
 
    Config : TOML_Value;
 
-   function Best_Score return Natural is
+
+   function Get_Natural
+     (Key     : String;
+      Default : Natural) return Natural is
    begin
       if Config /= No_TOML_Value and then
-        Config.Has (Key => Best_Score_Name) then
+        Config.Has (Key) then
 
-         return Natural (Config.Get (Best_Score_Name).As_Integer);
+         return Natural (Config.Get (Key).As_Integer);
       else
-         return 0;
+         return Default;
       end if;
 
    exception
       when Constraint_Error =>
 
-         Ada.Text_IO.Put_Line (Ada.Text_IO.Standard_Error,
-                              "Error: invalid format for " &
-                                Best_Score_Name);
-         return 0;
-   end Best_Score;
+         Ada.Text_IO.Put_Line
+           (File => Ada.Text_IO.Standard_Error,
+            Item => "Error: invalid format for " & Key);
+
+         return Default;
+   end Get_Natural;
+
+
+
+   function Best_Score return Natural is
+      (Get_Natural (Key => Best_Score_Key, Default => 0));
+
+   function Theme return Natural is
+      (Get_Natural (Key => Theme_Key, Default => 1));
 
 
    function Fullscreen_Mode return Boolean is
       Default : constant Boolean := False;
    begin
       if Config /= No_TOML_Value and then
-        Config.Has (Key => Fullscreen_Mode_Name) then
+        Config.Has (Key => Fullscreen_Mode_Key) then
 
-         return Config.Get (Fullscreen_Mode_Name).As_Boolean;
+         return Config.Get (Fullscreen_Mode_Key).As_Boolean;
       else
          return Default;
       end if;
@@ -50,13 +63,14 @@ package body Storage is
 
          Ada.Text_IO.Put_Line (Ada.Text_IO.Standard_Error,
                               "Error: invalid format for " &
-                                Fullscreen_Mode_Name);
+                                Fullscreen_Mode_Key);
          return Default;
    end Fullscreen_Mode;
 
    procedure Save_State
      (Best_Score : Natural;
-      Fullscreen_Mode : Boolean) is
+      Fullscreen_Mode : Boolean;
+      Theme           : Natural) is
 
       File : Ada.Text_IO.File_Type;
    begin
@@ -73,11 +87,14 @@ package body Storage is
          Config := Create_Table;
       end if;
 
-      Config.Set (Key => Best_Score_Name,
+      Config.Set (Key => Best_Score_Key,
                   Entry_Value => Create_Integer (Any_Integer (Best_Score)));
 
-      Config.Set (Key => Fullscreen_Mode_Name,
+      Config.Set (Key => Fullscreen_Mode_Key,
                   Entry_Value => Create_Boolean (Fullscreen_Mode));
+
+      Config.Set (Key => Theme_Key,
+                  Entry_Value => Create_Integer (Any_Integer (Theme)));
 
       TOML.File_IO.Dump_To_File (Config, File);
 

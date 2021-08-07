@@ -27,7 +27,7 @@ procedure Play_2048 is
    use Sf;
 
    -- ----- Keyboard management
-   type t_Keystroke is (Up, Down, Right, Left, Quit, Restart, Fullscreen_On_Off, Invalid);
+   type t_Keystroke is (Up, Down, Right, Left, Quit, Restart, Fullscreen_On_Off, Switch_Theme, Invalid);
    subtype t_Direction_Key is t_Keystroke range Up .. Left;
 
    function Get_Keystroke (Key_Code : Keyboard.sfKeyCode) return t_Keystroke is
@@ -35,6 +35,7 @@ procedure Play_2048 is
          when Keyboard.sfKeyQ => Quit,
          when Keyboard.sfKeyR => Restart,
          when Keyboard.sfKeyF11 => Fullscreen_On_Off,
+         when Keyboard.sfKeyTab => Switch_Theme,
          when Keyboard.sfKeyW | Keyboard.sfKeyLeft => Left,
          when Keyboard.sfKeyA | Keyboard.sfKeyUp => Up,
          when Keyboard.sfKeyS | Keyboard.sfKeyDown => Down,
@@ -47,25 +48,26 @@ procedure Play_2048 is
    subtype t_Row   is t_List (1..4);
    type    t_Board is array  (1..4) of t_Row;
 
+   type t_Theme is range 1 .. 4;
+
    State      : Game.t_Board_State;
    New_State  : Game.t_Board_State;
    Best       : Natural := 0;
    Video_Mode : constant VideoMode.sfVideoMode := (800, 600, 32);
    App_Win    : SfRenderWindow_Ptr;
-   Icon       : sfImage_Ptr := Image.createFromFile ("resources/icon.png");
+   Icon       : sfImage_Ptr;
    App_Event  : Event.sfEvent;
    Has_Changed : Boolean := True;
-   Tiles      : constant sfTexture_Ptr :=
-     Texture.createFromFile ("resources/tiles.png");
-   Tile_Size  : constant Positive := Positive (Texture.getSize (Tiles).y);
+   Tiles      : sfTexture_Ptr;
+   Tile_Size  : constant := 128;
    Board_Size : constant Positive := Tile_Size * t_Board'Length;
    Margin     : constant Positive := (Positive (Video_Mode.Height) - Board_Size) / 2;
    Pane_Center : constant Positive := Positive (Video_Mode.Width) -
      (Positive (Video_Mode.Width) - Board_Size - Margin) / 2;
    Tile_Sprite : sfSprite_Ptr := Sprite.create;
    Game_Sprite : sfSprite_Ptr := Sprite.create;
-   Game_Image : sfTexture_Ptr := Texture.createFromImage (Icon);
-   Game_Font  : sfFont_Ptr := Font.createFromFile("resources/DejaVuSans-Bold.ttf");
+   Game_Image : sfTexture_Ptr;
+   Game_Font  : sfFont_Ptr;
    Score_Text : sfText_Ptr := Text.create;
    Game_Text  : sfText_Ptr := Text.create;
    Text_UI    : Boolean := False;
@@ -73,9 +75,11 @@ procedure Play_2048 is
      "Arrows: move" & ASCII.LF &
      "R: restart game" & ASCII.LF &
      "Q: quit game" & ASCII.LF &
-     "F11: fullscreen";
-   Fullscreen : Boolean := Storage.Fullscreen_Mode;
+     "F11: fullscreen" & ASCII.LF &
+     "Tab: next theme";
 
+   Fullscreen : Boolean := Storage.Fullscreen_Mode;
+   Theme : t_Theme := t_theme (Storage.Theme);
 
    function Create_Window return SfRenderWindow_Ptr is
       (RenderWindow.create
@@ -173,6 +177,47 @@ procedure Play_2048 is
       Text.setOutlineThickness (The_Text, 1.0);
    end Set_Text_Style;
 
+   procedure Load_Theme is
+      Path : constant String :=
+        "themes/" & Ada.Strings.Fixed.Trim (Theme'Image,
+                                            Ada.Strings.Left) & "/";
+   begin
+
+      if Tiles /= null then
+         Texture.destroy (Tiles);
+      end if;
+      if Game_Font /= null then
+         Font.destroy (Game_Font);
+      end if;
+      if Icon /= null then
+         Image.destroy (Icon);
+      end if;
+      if Game_Image /= null then
+         Texture.destroy (Game_Image);
+      end if;
+
+      Tiles := Texture.createFromFile (Path & "tiles.png");
+
+      pragma Assert (Texture.getSize (Tiles).y = Tile_Size);
+
+      Game_Font := Font.createFromFile(Path & "font.ttf");
+      Icon := Image.createFromFile (Path & "icon.png");
+      Game_Image := Texture.createFromImage (Icon);
+
+      Sprite.setTexture (Tile_Sprite, Tiles);
+      Sprite.setTexture (Game_Sprite, Game_Image);
+
+      Set_Text_Style (Score_Text);
+      Set_Text_Style (Game_Text);
+
+      RenderWindow.setIcon
+        (renderWindow => App_Win,
+         width => Image.getSize (Icon).x,
+         height => Image.getSize (Icon).y,
+         pixels => Image.getPixelsPtr (Icon));
+
+   end Load_Theme;
+
    function To_Direction (Keystroke : t_Direction_Key) return Game.t_Direction is
      (case Keystroke is
          when Left    => Game.Left,
@@ -187,19 +232,10 @@ begin
 
    App_Win := Create_Window;
 
-   Sprite.setTexture (Tile_Sprite, Tiles);
-   Sprite.setTexture (Game_Sprite, Game_Image);
-
-   Set_Text_Style (Score_Text);
-   Set_Text_Style (Game_Text);
+   Load_Theme;
 
    Text.setCharacterSize (Game_Text, Text.getCharacterSize (Game_Text) * 2);
 
-   RenderWindow.setIcon
-     (renderWindow => App_Win,
-      width => Image.getSize (Icon).x,
-      height => Image.getSize (Icon).y,
-      pixels => Image.getPixelsPtr (Icon));
 
    Best := Storage.Best_Score;
 
@@ -258,7 +294,16 @@ begin
                         Display_Board;
                         Has_Changed := False;
 
-                     when others  =>
+                     when Switch_Theme =>
+
+                        Theme := (if Theme + 1 > t_Theme'Last then t_Theme'First else Theme + 1);
+
+                        Load_Theme;
+
+                        Display_Board (Message => "Theme" & Theme'Image);
+                        Has_Changed := False;
+
+                     when Invalid =>
                         Display_Board (Message => Help);
                         Has_Changed := False;
                   end case;
@@ -293,7 +338,8 @@ begin
 
    Storage.Save_State
      (Best_Score => Best,
-      Fullscreen_Mode => Fullscreen);
+      Fullscreen_Mode => Fullscreen,
+      Theme => Natural (Theme));
 
    RenderWindow.destroy (App_Win);
 
