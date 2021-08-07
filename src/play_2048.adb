@@ -14,10 +14,10 @@ with Sf.Window.Window;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
 with Ada.Command_Line;
-
-with System.Random_Numbers;
+with Ada.Strings.Fixed;
 
 with Storage;
+with Game;
 
 procedure Play_2048 is
 
@@ -28,6 +28,7 @@ procedure Play_2048 is
 
    -- ----- Keyboard management
    type t_Keystroke is (Up, Down, Right, Left, Quit, Restart, Fullscreen_On_Off, Invalid);
+   subtype t_Direction_Key is t_Keystroke range Up .. Left;
 
    function Get_Keystroke (Key_Code : Keyboard.sfKeyCode) return t_Keystroke is
      (case Key_Code is
@@ -42,22 +43,18 @@ procedure Play_2048 is
 
 
    -- ----- Game data
-   function Random_Int is new System.Random_Numbers.Random_Discrete(Integer);
    type    t_List  is array (Positive range <>) of Natural;
    subtype t_Row   is t_List (1..4);
    type    t_Board is array  (1..4) of t_Row;
 
-   Board      : t_Board;
-   New_Board  : t_Board;
-   Blanks     : Natural;
-   Score      : Natural;
+   State      : Game.t_Board_State;
+   New_State  : Game.t_Board_State;
    Best       : Natural := 0;
-   Generator  : System.Random_Numbers.Generator;
    Video_Mode : constant VideoMode.sfVideoMode := (800, 600, 32);
    App_Win    : SfRenderWindow_Ptr;
    Icon       : sfImage_Ptr := Image.createFromFile ("resources/icon.png");
    App_Event  : Event.sfEvent;
-   Null_Event : Boolean := False;
+   Has_Changed : Boolean := True;
    Tiles      : constant sfTexture_Ptr :=
      Texture.createFromFile ("resources/tiles.png");
    Tile_Size  : constant Positive := Positive (Texture.getSize (Tiles).y);
@@ -82,10 +79,10 @@ procedure Play_2048 is
 
    function Create_Window return SfRenderWindow_Ptr is
       (RenderWindow.create
-	(mode  => Video_Mode,
-	 title => "2048 Game!",
-	 style => (if Fullscreen then Sf.Window.Window.sfFullscreen
-	           else Sf.Window.Window.sfDefaultStyle)));
+	    (mode  => Video_Mode,
+	     title => "2048 Game!",
+	     style => (if Fullscreen then Sf.Window.Window.sfFullscreen
+	               else Sf.Window.Window.sfDefaultStyle)));
 
    procedure Display_Text (Message : String) is
       Board_Center : constant Float := Float (Margin + Board_Size / 2);
@@ -107,9 +104,13 @@ procedure Play_2048 is
    procedure Display_Board (Message : String := "") is
       Horizontal_Rule : constant String := "+----+----+----+----+";
       function Center (Value : in String) return String is
-        ((1..(2-(Value'Length-1)/2) => ' ') & -- Add leading spaces
-         Value(Value'First+1..Value'Last)   & -- Trim the leading space of the raw number image
-         (1..(2-Value'Length/2) => ' '));     -- Add trailing spaces
+         Target : String (1 .. 4);
+      begin
+         Ada.Strings.Fixed.Move
+           (Source => Value, Target => Target, Justify => Ada.Strings.Center);
+         return Target;
+      end Center;
+      Board : Game.t_Board renames State.Board;
    begin
       if Text_UI then
          Put_Line (Horizontal_Rule);
@@ -120,7 +121,7 @@ procedure Play_2048 is
             Put_Line("|");
             Put_Line (Horizontal_Rule);
          end loop;
-         Put_Line("Score =" & Score'Image & "  Best Score =" & Best'Image);
+         Put_Line("Score =" & State.Score'Image & "  Best Score =" & Best'Image);
       end if;
 
       RenderWindow.clear(App_Win, sfWhite);
@@ -141,7 +142,7 @@ procedure Play_2048 is
          end loop;
       end loop;
 
-      Text.setString (Score_Text, "Score" & ASCII.LF & Score'Image & ASCII.LF & ASCII.LF &
+      Text.setString (Score_Text, "Score" & ASCII.LF & State.Score'Image & ASCII.LF & ASCII.LF &
                         "Best score" & ASCII.LF & Best'Image);
       Text.setPosition (Score_Text,
                         (x => Float (Pane_Center) - Text.getLocalBounds (Score_Text).width / 2.0,
@@ -172,79 +173,14 @@ procedure Play_2048 is
       Text.setOutlineThickness (The_Text, 1.0);
    end Set_Text_Style;
 
-   -- ----- Game mechanics
-   procedure Add_Block is
-      Block_Offset : Positive := Random_Int(Generator, 1, Blanks);
-   begin
-      Blanks := Blanks-1;
-      for Row of Board loop
-         for Cell of Row loop
-            if Cell = 0 then
-               if Block_Offset = 1 then
-                  Cell := (if Random_Int(Generator,1,10) = 1 then 4 else 2);
-                  return;
-               else
-                  Block_Offset := Block_Offset-1;
-               end if;
-            end if;
-         end loop;
-      end loop;
-   end Add_Block;
-
-   procedure Reset_Game is
-   begin
-      Board  := (others => (others => 0));
-      Blanks := 16;
-      Score  := 0;
-      Add_Block;
-      Add_Block;
-   end Reset_Game;
-
-   -- Moving and merging will always be performed leftward, hence the following transforms
-   function HFlip (What : in t_Row) return t_Row is
-     (What(4),What(3),What(2),What(1));
-   function VFlip (What : in t_Board) return t_Board is
-     (HFlip(What(1)),HFlip(What(2)),HFlip(What(3)),HFlip(What(4)));
-   function Transpose (What : in t_Board) return t_Board is
-   begin
-      return Answer : t_Board do
-         for Row in t_Board'Range loop
-            for Column in t_Row'Range loop
-               Answer(Column)(Row) := What(Row)(Column);
-            end loop;
-         end loop;
-      end return;
-   end Transpose;
-
-   -- For moving/merging, recursive expression functions will be used, but they
-   -- can't contain statements, hence the following sub-function used by Merge
-   function Add_Blank (Delta_Score : in Natural) return t_List is
-   begin
-      Blanks := Blanks+1;
-      Score  := Score+Delta_Score;
-      if Score > Best then
-         Best := Score;
-      end if;
-      return (1 => 0);
-   end Add_Blank;
-
-   function Move_Row (What : in t_List) return t_List is
-     (if What'Length = 1 then What
-      elsif What(What'First) = 0
-      then Move_Row(What(What'First+1..What'Last)) & (1 => 0)
-      else (1 => What(What'First)) & Move_Row(What(What'First+1..What'Last)));
-
-   function Merge (What : in t_List) return t_List is
-     (if What'Length <= 1 or else What(What'First) = 0 then What
-      elsif What(What'First) = What(What'First+1)
-      then (1 => 2*What(What'First)) & Merge(What(What'First+2..What'Last)) & Add_Blank(What(What'First))
-      else (1 => What(What'First)) & Merge(What(What'First+1..What'Last)));
-
-   function Move (What : in t_Board) return t_Board is
-     (Merge(Move_Row(What(1))),Merge(Move_Row(What(2))),Merge(Move_Row(What(3))),Merge(Move_Row(What(4))));
+   function To_Direction (Keystroke : t_Direction_Key) return Game.t_Direction is
+     (case Keystroke is
+         when Left    => Game.Left,
+         when Right   => Game.Right,
+         when Up      => Game.Up,
+         when Down    => Game.Down);
 
 begin
-   System.Random_Numbers.Reset(Generator);
 
    Text_UI := Ada.Command_Line.Argument_Count >= 1 and then
      Ada.Command_Line.Argument (1) = "-text";
@@ -270,19 +206,19 @@ begin
    Main_Loop:
    loop
 
-      Reset_Game;
+      Game.Reset_Game (State);
 
       Game_Loop:
       loop
 
-         if not Null_Event then
+         if Has_Changed then
             Display_Board;
          end if;
 
          if RenderWindow.waitEvent (App_Win, event => App_Event) /= sfTrue then
-            Null_Event := True;
+            Has_Changed := False;
          else
-            Null_Event := False;
+            Has_Changed := True;
             case App_Event.eventType is
                when Event.sfEvtClosed =>
 
@@ -292,17 +228,27 @@ begin
                when Event.sfEvtResized =>
 
                   Display_Board;
-                  Null_Event := True;
+                  Has_Changed := False;
 
                when Event.sfEvtKeyPressed =>
 
                   case Get_Keystroke (Key_Code => App_Event.key.code) is
-                     when Restart => exit Game_Loop;
-                     when Quit    => exit Main_Loop;
-                     when Left    => New_Board := Move(Board);
-                     when Right   => New_Board := VFlip(Move(VFlip(Board)));
-                     when Up      => New_Board := Transpose(Move(Transpose(Board)));
-                     when Down    => New_Board := Transpose(VFlip(Move(VFlip(Transpose(Board)))));
+                     when Restart =>
+                        exit Game_Loop;
+                     when Quit =>
+                        exit Main_Loop;
+                     when t_Direction_Key =>
+
+                        Game.Move
+                          (Direction =>
+                             To_Direction (Get_Keystroke (Key_Code => App_Event.key.code)),
+                           State => State,
+                           New_State => New_State);
+
+                        if New_State.Score > Best then
+                           Best := New_State.Score;
+                        end if;
+
                      when Fullscreen_On_Off =>
 
                         Fullscreen := not Fullscreen;
@@ -310,40 +256,35 @@ begin
                         App_Win := Create_Window;
 
                         Display_Board;
-                        Null_Event := True;
+                        Has_Changed := False;
 
                      when others  =>
                         Display_Board (Message => Help);
-                        Null_Event := True;
+                        Has_Changed := False;
                   end case;
 
-               when others => Null_Event := True;
+               when others =>
+                  Has_Changed := False;
             end case;
 
          end if;
 
-         if Null_Event then
+         if not Has_Changed then
             null;
-         elsif New_Board = Board then
+         elsif Game."=" (New_State.Board, State.Board) then
             Display_Board (Message => "Invalid move...");
-            Null_Event := True;
-         elsif (for some Row of New_Board => (for some Cell of Row => Cell = 2048)) then
-            Board := New_Board;
+            Has_Changed := False;
+         elsif Game.Has_Won (New_State.Board) then
+            State := New_State;
             Display_Board (Message => "You win!");
-            Null_Event := True;
+            Has_Changed := False;
             exit Game_Loop;
          else
-            Board := New_Board;
-            Add_Block; -- OK since the board has changed
-            if Blanks = 0
-              and then (for all Row in 1..4 =>
-                          (for all Column in 1..3 =>
-                             (Board(Row)(Column) /= Board(Row)(Column+1))))
-              and then (for all Row in 1..3 =>
-                          (for all Column in 1..4 =>
-                             (Board(Row)(Column) /= Board(Row+1)(Column)))) then
+            State := New_State;
+            Game.Add_Block (State); -- OK since the board has changed
+            if Game.Has_Lost (State) then
                Display_Board (Message => "You lose!");
-               Null_Event := True;
+               Has_Changed := False;
                exit Game_Loop;
             end if;
          end if;
