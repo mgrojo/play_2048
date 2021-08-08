@@ -16,6 +16,7 @@ with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
 with Ada.Command_Line;
 with Ada.Strings.Fixed;
 with Ada.Directories;
+with Ada.Environment_Variables;
 
 with Storage;
 with Game;
@@ -173,7 +174,13 @@ procedure Play_2048 is
    end Set_Text_Style;
 
    function Theme_Path (Theme_Id : t_theme) return String is
-      ("themes/" & Ada.Strings.Fixed.Trim (Theme_Id'Image,
+     (-- Use the APPDIR env var if defined. In this way we allow
+      -- running from an AppImage and still find the resource files.
+      --
+      (if Ada.Environment_Variables.Exists ("APPDIR") then
+          Ada.Environment_Variables.Value ("APPDIR") & "/"
+       else "") &
+        "themes/" & Ada.Strings.Fixed.Trim (Theme_Id'Image,
                                             Ada.Strings.Left) & "/");
 
    function Next_Theme return t_Theme is

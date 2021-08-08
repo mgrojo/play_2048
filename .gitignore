@@ -4,4 +4,5 @@
 obj/
 alire/
 alire.lock
-.env
+play_2048.toml
+AppDir/

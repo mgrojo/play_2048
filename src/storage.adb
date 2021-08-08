@@ -1,6 +1,7 @@
 with Ada.Directories;
 with Ada.Text_IO;
 with Ada.Strings.Unbounded;
+with Ada.Environment_Variables;
 
 with TOML.File_IO;
 
@@ -11,7 +12,14 @@ package body Storage is
    Best_Score_Key : constant String := "best_score";
    Fullscreen_Mode_Key : constant String := "fullscreen_mode";
    Theme_Key : constant String := "theme_id";
-   Filename : constant String := "play_2048.toml";
+
+   -- In Unix-like OS, save the configuration file as dot-file in the
+   -- home as usual.  In others, save in current directory.
+   --
+   Filename : constant String :=
+     (if Ada.Environment_Variables.Exists ("HOME") then
+         Ada.Environment_Variables.Value ("HOME") & "/." else
+         "") & "play_2048.toml";
 
    Config : TOML_Value;
 
