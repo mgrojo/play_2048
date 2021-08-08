@@ -15,6 +15,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
 with Ada.Command_Line;
 with Ada.Strings.Fixed;
+with Ada.Directories;
 
 with Storage;
 with Game;
@@ -42,13 +43,7 @@ procedure Play_2048 is
          when Keyboard.sfKeyD | Keyboard.sfKeyRight => Right,
          when others => Invalid);
 
-
-   -- ----- Game data
-   type    t_List  is array (Positive range <>) of Natural;
-   subtype t_Row   is t_List (1..4);
-   type    t_Board is array  (1..4) of t_Row;
-
-   type t_Theme is range 1 .. 4;
+   type t_Theme is range 1 .. 9;
 
    State      : Game.t_Board_State;
    New_State  : Game.t_Board_State;
@@ -60,16 +55,16 @@ procedure Play_2048 is
    Has_Changed : Boolean := True;
    Tiles      : sfTexture_Ptr;
    Tile_Size  : constant := 128;
-   Board_Size : constant Positive := Tile_Size * t_Board'Length;
+   Board_Size : constant Positive := Tile_Size * Game.t_Board'Length;
    Margin     : constant Positive := (Positive (Video_Mode.Height) - Board_Size) / 2;
    Pane_Center : constant Positive := Positive (Video_Mode.Width) -
      (Positive (Video_Mode.Width) - Board_Size - Margin) / 2;
-   Tile_Sprite : sfSprite_Ptr := Sprite.create;
-   Game_Sprite : sfSprite_Ptr := Sprite.create;
+   Tile_Sprite : constant sfSprite_Ptr := Sprite.create;
+   Game_Sprite : constant sfSprite_Ptr := Sprite.create;
    Game_Image : sfTexture_Ptr;
    Game_Font  : sfFont_Ptr;
-   Score_Text : sfText_Ptr := Text.create;
-   Game_Text  : sfText_Ptr := Text.create;
+   Score_Text : constant sfText_Ptr := Text.create;
+   Game_Text  : constant sfText_Ptr := Text.create;
    Text_UI    : Boolean := False;
    Help       : constant String :=
      "Arrows: move" & ASCII.LF &
@@ -134,9 +129,9 @@ procedure Play_2048 is
          for j in Board(i)'range loop
             declare
                Cell : Natural renames Board(i)(j);
-               Sprite_Offset : Natural := Natural (if Cell = 0 then 0.0
-                                                   else Log (X    => Float (Cell),
-                                                             Base => 2.0));
+               Sprite_Offset : constant Natural := Natural (if Cell = 0 then 0.0
+                                                            else Log (X    => Float (Cell),
+                                                                      Base => 2.0));
             begin
                Sprite.setTextureRect(Tile_Sprite, (Sprite_Offset * Tile_Size, 0, Tile_Size, Tile_Size));
                Sprite.setPosition(Tile_Sprite, (x => Float(Margin + (j - 1) * Tile_Size),
@@ -177,10 +172,17 @@ procedure Play_2048 is
       Text.setOutlineThickness (The_Text, 1.0);
    end Set_Text_Style;
 
+   function Theme_Path (Theme_Id : t_theme) return String is
+      ("themes/" & Ada.Strings.Fixed.Trim (Theme_Id'Image,
+                                            Ada.Strings.Left) & "/");
+
+   function Next_Theme return t_Theme is
+     (if Theme + 1 > t_Theme'Last or else not Ada.Directories.Exists (Theme_Path (Theme + 1))
+      then t_Theme'First
+      else Theme + 1);
+
    procedure Load_Theme is
-      Path : constant String :=
-        "themes/" & Ada.Strings.Fixed.Trim (Theme'Image,
-                                            Ada.Strings.Left) & "/";
+      Path : constant String := Theme_Path (Theme);
    begin
 
       if Tiles /= null then
@@ -203,6 +205,8 @@ procedure Play_2048 is
       Game_Font := Font.createFromFile(Path & "font.ttf");
       Icon := Image.createFromFile (Path & "icon.png");
       Game_Image := Texture.createFromImage (Icon);
+
+      pragma Assert (Game_Font /= null and Icon /= null and Game_Image /= null);
 
       Sprite.setTexture (Tile_Sprite, Tiles);
       Sprite.setTexture (Game_Sprite, Game_Image);
@@ -296,7 +300,7 @@ begin
 
                      when Switch_Theme =>
 
-                        Theme := (if Theme + 1 > t_Theme'Last then t_Theme'First else Theme + 1);
+                        Theme := Next_Theme;
 
                         Load_Theme;
 
