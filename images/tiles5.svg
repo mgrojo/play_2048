@@ -17,8 +17,8 @@
    inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
    sodipodi:docname="tiles5.svg"
    inkscape:export-filename="/home/mgr/src/github/mgrojo/2048-Game/themes/5/tiles.png"
-   inkscape:export-xdpi="89.040001"
-   inkscape:export-ydpi="89.040001">
+   inkscape:export-xdpi="89.04348"
+   inkscape:export-ydpi="89.04348">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -28,8 +28,8 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.98994949"
-     inkscape:cx="1141.7724"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="850.84847"
      inkscape:cy="-82.873525"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -47,7 +47,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -66,134 +66,134 @@
        inkscape:export-xdpi="89"
        inkscape:export-ydpi="89" />
     <rect
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#cdc1b4;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.64599991;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#cdc1b4;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.6595614;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
        id="rect848"
        width="32.051903"
-       height="31.725956"
+       height="32.051998"
        x="2.4578452"
-       y="262.8808"
-       ry="1.3229166"
+       y="262.55475"
+       ry="1.3365121"
        inkscape:export-filename="/home/mgr/src/github/mgrojo/2048-Game/resources/tiles.png"
        inkscape:export-xdpi="89"
        inkscape:export-ydpi="89" />
     <rect
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#edc22e;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.64599991;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#edc22e;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.6595614;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
        id="rect848-4-6-0-7-4-2"
        width="32.051903"
-       height="31.725956"
+       height="32.051998"
        x="403.48877"
-       y="262.8808"
-       ry="1.3229166"
+       y="262.55475"
+       ry="1.3365121"
        inkscape:export-filename="/home/mgr/src/github/mgrojo/2048-Game/themes/5/icon.png"
-       inkscape:export-xdpi="89"
-       inkscape:export-ydpi="89" />
+       inkscape:export-xdpi="101.44"
+       inkscape:export-ydpi="101.44" />
     <rect
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#eee4da;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.64599991;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#eee4da;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.6595614;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
        id="rect848-4"
        width="32.051903"
-       height="31.725956"
+       height="32.051998"
        x="38.915413"
-       y="262.8808"
-       ry="1.3229166"
+       y="262.55475"
+       ry="1.3365121"
        inkscape:export-filename="/home/mgr/src/github/mgrojo/2048-Game/resources/tiles.png"
        inkscape:export-xdpi="89"
        inkscape:export-ydpi="89" />
     <rect
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#ede0c8;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.64599991;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#ede0c8;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.6595614;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
        id="rect848-4-6"
        width="32.051903"
-       height="31.725956"
+       height="32.051998"
        x="75.37336"
-       y="262.8808"
-       ry="1.3229166"
+       y="262.55475"
+       ry="1.3365121"
        inkscape:export-filename="/home/mgr/src/github/mgrojo/2048-Game/resources/tiles.png"
        inkscape:export-xdpi="89"
        inkscape:export-ydpi="89" />
     <rect
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#f2b179;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.64599991;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#f2b179;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.6595614;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
        id="rect848-4-6-0"
        width="32.051903"
-       height="31.725956"
+       height="32.051998"
        x="111.83115"
-       y="262.8808"
-       ry="1.3229166"
+       y="262.55475"
+       ry="1.3365121"
        inkscape:export-filename="/home/mgr/src/github/mgrojo/2048-Game/resources/tiles.png"
        inkscape:export-xdpi="89"
        inkscape:export-ydpi="89" />
     <rect
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#f59563;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.64599991;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#f59563;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.6595614;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
        id="rect848-4-6-0-7"
        width="32.051903"
-       height="31.725956"
+       height="32.051998"
        x="148.28867"
-       y="262.8808"
-       ry="1.3229166"
+       y="262.55475"
+       ry="1.3365121"
        inkscape:export-filename="/home/mgr/src/github/mgrojo/2048-Game/resources/tiles.png"
        inkscape:export-xdpi="89"
        inkscape:export-ydpi="89" />
     <rect
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#f67c5f;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.64599991;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#f67c5f;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.6595614;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
        id="rect848-4-6-0-7-4"
        width="32.051903"
-       height="31.725956"
+       height="32.051998"
        x="184.74556"
-       y="262.8808"
-       ry="1.3229166"
+       y="262.55475"
+       ry="1.3365121"
        inkscape:export-filename="/home/mgr/src/github/mgrojo/2048-Game/resources/tiles.png"
        inkscape:export-xdpi="89"
        inkscape:export-ydpi="89" />
     <rect
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#f65e3b;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.64599991;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#f65e3b;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.6595614;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
        id="rect848-4-6-0-7-4-3"
        width="32.051903"
-       height="31.725956"
+       height="32.051998"
        x="221.20193"
-       y="262.8808"
-       ry="1.3229166"
+       y="262.55475"
+       ry="1.3365121"
        inkscape:export-filename="/home/mgr/src/github/mgrojo/2048-Game/resources/tiles.png"
        inkscape:export-xdpi="89"
        inkscape:export-ydpi="89" />
     <rect
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#edcf72;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.64599991;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#edcf72;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.6595614;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
        id="rect848-4-6-0-7-4-7"
        width="32.051903"
-       height="31.725956"
+       height="32.051998"
        x="257.659"
-       y="262.8808"
-       ry="1.3229166"
+       y="262.55475"
+       ry="1.3365121"
        inkscape:export-filename="/home/mgr/src/github/mgrojo/2048-Game/resources/tiles.png"
        inkscape:export-xdpi="89"
        inkscape:export-ydpi="89" />
     <rect
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#edcc61;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.64599991;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#edcc61;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.6595614;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
        id="rect848-4-6-0-7-4-9"
        width="32.051903"
-       height="31.725956"
+       height="32.051998"
        x="294.11642"
-       y="262.8808"
-       ry="1.3229166"
+       y="262.55475"
+       ry="1.3365121"
        inkscape:export-filename="/home/mgr/src/github/mgrojo/2048-Game/resources/tiles.png"
        inkscape:export-xdpi="89"
        inkscape:export-ydpi="89" />
     <rect
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#edc850;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.64599991;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#edc850;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.6595614;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
        id="rect848-4-6-0-7-4-0"
        width="32.051903"
-       height="31.725956"
+       height="32.051998"
        x="330.57382"
-       y="262.8808"
-       ry="1.3229166"
+       y="262.55475"
+       ry="1.3365121"
        inkscape:export-filename="/home/mgr/src/github/mgrojo/2048-Game/resources/tiles.png"
        inkscape:export-xdpi="89"
        inkscape:export-ydpi="89" />
     <rect
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#edc53f;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.64599991;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:1;fill:#edc53f;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.6595614;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;paint-order:normal;enable-background:accumulate"
        id="rect848-4-6-0-7-4-02"
        width="32.051903"
-       height="31.725956"
+       height="32.051998"
        x="367.03131"
-       y="262.8808"
-       ry="1.3229166"
+       y="262.55475"
+       ry="1.3365121"
        inkscape:export-filename="/home/mgr/src/github/mgrojo/2048-Game/resources/tiles.png"
        inkscape:export-xdpi="89"
        inkscape:export-ydpi="89" />
@@ -344,8 +344,8 @@
        y="280.75885"
        id="text849-2-0-6-0-5-5-3"
        inkscape:export-filename="/home/mgr/src/github/mgrojo/2048-Game/themes/5/icon.png"
-       inkscape:export-xdpi="89"
-       inkscape:export-ydpi="89"><tspan
+       inkscape:export-xdpi="101.44"
+       inkscape:export-ydpi="101.44"><tspan
          sodipodi:role="line"
          id="tspan847-1-6-1-0-3-8-3"
          x="405.00571"
