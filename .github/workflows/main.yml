@@ -1,4 +1,5 @@
 # Build using Alire. 
+name: Build
 
 on:
   push:
@@ -14,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        os: [windows-latest, ubuntu-latest, ubuntu-16.04]
 
     steps:    
        - name: Checkout
@@ -28,3 +29,22 @@ jobs:
          uses: alire-project/setup-alire@latest-stable
        - name: Build
          run: alr build
+         
+  release:
+    name: Continuous AppImage
+    runs-on: ubuntu-16.04
+    strategy:
+      matrix:
+        os: [ubuntu-16.04]
+    steps:    
+       - name: Build AppImage
+         run: VERSION=continuous make AppImage
+       - name: Create Release
+         uses: ncipollo/release-action@v1
+         with:
+           allowUpdates: True
+           tag: continuous
+           name: Continuous build
+           prerelease: True
+           artifacts: "Play_2048*.AppImage"
+           token: ${{ secrets.GITHUB_TOKEN }}
