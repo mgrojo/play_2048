@@ -253,7 +253,7 @@ begin
    Main_Loop:
    loop
 
-      Game.Reset_Game (State);
+      Storage.Restore_Game (State);
 
       Game_Loop:
       loop
@@ -350,7 +350,8 @@ begin
    Storage.Save_State
      (Best_Score => Best,
       Fullscreen_Mode => Fullscreen,
-      Theme => Natural (Theme));
+      Theme => Natural (Theme),
+      Game_State => State);
 
    RenderWindow.destroy (App_Win);
 
