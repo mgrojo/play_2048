@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest, ubuntu-18.04]
+        os: [windows-latest, ubuntu-latest]
 
     steps:    
        - name: Checkout
@@ -33,12 +33,20 @@ jobs:
   release:
     name: Continuous AppImage
     runs-on: ubuntu-18.04
-    strategy:
-      matrix:
-        os: [ubuntu-18.04]
     steps:    
+       - name: Checkout
+         uses: actions/checkout@v2
+       - name: ada-actions/toolchain
+         uses: ada-actions/toolchain@ce2021
+         with:
+           distrib: community
+           target: native
+       - name: alire-project/setup-alire
+         uses: alire-project/setup-alire@latest-stable
+       - name: Build
+         run: alr build
        - name: Build AppImage
-         run: VERSION=continuous make AppImage
+         run: VERSION=${GITHUB_BASE_REF:-${GITHUB_REF#refs/heads/}} make AppImage
        - name: Create Release
          uses: ncipollo/release-action@v1
          with:
