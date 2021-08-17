@@ -1,3 +1,7 @@
+
+-- This isn't portable and raises a warning. It should be replaced by
+-- the standard way in Ada 202x.
+-- http://www.ada-auth.org/cgi-bin/cvsweb.cgi/ai12s/ai12-0144-1.txt?rev=1.13
 with System.Random_Numbers;
 
 package body Game is
