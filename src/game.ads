@@ -18,6 +18,7 @@ package Game is
    end record;
 
    procedure Reset_Game (State : out t_Board_State);
+   procedure Restart_Game (State : out t_Board_State);
 
    procedure Add_Block (State : in out t_Board_State);
 

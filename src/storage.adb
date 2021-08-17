@@ -85,10 +85,10 @@ package body Storage is
       Index : Natural := 1;
    begin
 
-      Game.Reset_Game (Game_State);
-
       if Config /= No_TOML_Value and then
         Config.Has (Key => Board_State_Key) then
+
+         Game.Reset_Game (Game_State);
 
          Board_State_Value := Config.Get (Board_State_Key);
 
@@ -101,8 +101,8 @@ package body Storage is
 
                Index := Index + 1;
 
-               if Game_State.Board (i)(j) = 0 then
-                  Game_State.Blanks := Game_State.Blanks + 1;
+               if Game_State.Board (i)(j) /= 0 then
+                  Game_State.Blanks := Game_State.Blanks - 1;
                end if;
 
             end loop;
@@ -110,6 +110,9 @@ package body Storage is
 
          Game_State.Score := Get_Natural (Key => Score_Key, Default => 0);
 
+      else
+
+         Game.Restart_Game (Game_State);
       end if;
 
    exception
