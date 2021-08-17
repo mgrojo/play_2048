@@ -1,7 +1,9 @@
 [![Build](https://github.com/mgrojo/play_2048/actions/workflows/main.yml/badge.svg)](https://github.com/mgrojo/play_2048/actions/workflows/main.yml)
 
-This is another implementation of the [2048 game](https://github.com/gabrielecirulli/2048)
-implemented in Ada using [ASFML](https://mgrojo.github.io/ASFML/).
+This is another implementation of the [2048
+game](https://github.com/gabrielecirulli/2048) implemented in Ada
+using [ASFML](https://mgrojo.github.io/ASFML/) for graphics and
+[ada-toml])https://github.com/pmderodat/ada-toml) for saving state.
 
 # Features
 
