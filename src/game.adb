@@ -1,3 +1,7 @@
+
+-- This isn't portable and raises a warning. It should be replaced by
+-- the standard way in Ada 202x.
+-- http://www.ada-auth.org/cgi-bin/cvsweb.cgi/ai12s/ai12-0144-1.txt?rev=1.13
 with System.Random_Numbers;
 
 package body Game is
@@ -10,9 +14,14 @@ package body Game is
       State.Board  := (others => (others => 0));
       State.Blanks := t_Cell_Count'Last;
       State.Score  := 0;
-      Add_Block (State);
-      Add_Block (State);
    end Reset_Game;
+
+   procedure Restart_Game (State : out t_Board_State) is
+   begin
+      Reset_Game (State);
+      Add_Block (State);
+      Add_Block (State);
+   end Restart_Game;
 
    procedure Add_Block (State : in out t_Board_State) is
       Block_Offset : Positive := Random_Int (Generator, 1, State.Blanks);

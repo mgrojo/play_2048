@@ -12,6 +12,8 @@ package body Storage is
    Best_Score_Key : constant String := "best_score";
    Fullscreen_Mode_Key : constant String := "fullscreen_mode";
    Theme_Key : constant String := "theme_id";
+   Board_State_Key : constant String := "board_state";
+   Score_Key : constant String := "score";
 
    -- In Unix-like OS, save the configuration file as dot-file in the
    -- home as usual.  In others, save in current directory.
@@ -75,12 +77,63 @@ package body Storage is
          return Default;
    end Fullscreen_Mode;
 
+   procedure Restore_Game
+     (Game_State : out Game.t_Board_State) is
+
+      Board_State_Value : TOML_Value;
+
+      Index : Natural := 1;
+   begin
+
+      if Config /= No_TOML_Value and then
+        Config.Has (Key => Board_State_Key) then
+
+         Game.Reset_Game (Game_State);
+
+         Board_State_Value := Config.Get (Board_State_Key);
+
+         for i in Game_State.Board'range loop
+            for j in Game_State.Board(i)'range loop
+
+               Game_State.Board (i)(j) :=
+                 Natural (Board_State_Value.Item
+                            (Index).As_Integer);
+
+               Index := Index + 1;
+
+               if Game_State.Board (i)(j) /= 0 then
+                  Game_State.Blanks := Game_State.Blanks - 1;
+               end if;
+
+            end loop;
+         end loop;
+
+         Game_State.Score := Get_Natural (Key => Score_Key, Default => 0);
+
+      else
+
+         Game.Restart_Game (Game_State);
+      end if;
+
+   exception
+      when others =>
+
+         Ada.Text_IO.Put_Line (Ada.Text_IO.Standard_Error,
+                               "Error: invalid format for " &
+                                 Board_State_Key);
+
+      Game.Reset_Game (Game_State);
+
+   end Restore_Game;
+
    procedure Save_State
      (Best_Score : Natural;
       Fullscreen_Mode : Boolean;
-      Theme           : Natural) is
+      Theme : Natural;
+      Game_State : Game.t_Board_State) is
 
       File : Ada.Text_IO.File_Type;
+      Board_State_Value : TOML_Value;
    begin
 
       begin
@@ -104,6 +157,22 @@ package body Storage is
       Config.Set (Key => Theme_Key,
                   Entry_Value => Create_Integer (Any_Integer (Theme)));
 
+      Board_State_Value := Create_Array (Item_Kind => TOML_Array);
+
+      for i in Game_State.Board'range loop
+         for j in Game_State.Board(i)'range loop
+
+            Board_State_Value.Append
+              (Item => Create_Integer (Any_Integer (Game_state.Board(i)(j))));
+         end loop;
+      end loop;
+
+      Config.Set (Key => Board_State_Key,
+                  Entry_Value => Board_State_Value);
+
+      Config.Set (Key => Score_Key,
+                  Entry_Value => Create_Integer (Any_Integer (Game_state.Score)));
+
       TOML.File_IO.Dump_To_File (Config, File);
 
       Ada.Text_IO.Close (File);
@@ -121,7 +190,9 @@ begin
             Config := Result.Value;
          else
             Ada.Text_IO.Put (Ada.Text_IO.Standard_Error,
-                             "Error: while loading " & Filename & ": ");
+                             "Error: while loading " & Filename & ":" &
+                               Result.Location.Line'Image & ":" &
+                               Result.Location.Column'Image & ": ");
             Ada.Text_IO.Put_Line
               (Ada.Text_IO.Standard_Error,
                Ada.Strings.Unbounded.To_String (Result.Message));

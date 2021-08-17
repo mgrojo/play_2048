@@ -76,6 +76,7 @@ procedure Play_2048 is
 
    Fullscreen : Boolean := Storage.Fullscreen_Mode;
    Theme : t_Theme := t_theme (Storage.Theme);
+   First_Time : Boolean := True;
 
    function Create_Window return SfRenderWindow_Ptr is
       (RenderWindow.create
@@ -253,7 +254,12 @@ begin
    Main_Loop:
    loop
 
-      Game.Reset_Game (State);
+      if First_Time then
+         Storage.Restore_Game (State);
+         First_Time := False;
+      else
+         Game.Restart_Game (State);
+      end if;
 
       Game_Loop:
       loop
@@ -350,7 +356,8 @@ begin
    Storage.Save_State
      (Best_Score => Best,
       Fullscreen_Mode => Fullscreen,
-      Theme => Natural (Theme));
+      Theme => Natural (Theme),
+      Game_State => State);
 
    RenderWindow.destroy (App_Win);
 
