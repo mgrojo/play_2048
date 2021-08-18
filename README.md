@@ -1,13 +1,13 @@
 [![Build](https://github.com/mgrojo/play_2048/actions/workflows/main.yml/badge.svg)](https://github.com/mgrojo/play_2048/actions/workflows/main.yml)
 
-This is another implementation of the [2048
-game](https://github.com/gabrielecirulli/2048) implemented in Ada
+This is yet another implementation of the [2048
+game](https://github.com/gabrielecirulli/2048), implemented in Ada
 using [ASFML](https://mgrojo.github.io/ASFML/) for graphics and
-[ada-toml])https://github.com/pmderodat/ada-toml) for saving state.
+[ada-toml](https://github.com/pmderodat/ada-toml) for saving state.
 
 # Features
 
-- Different themes can be switched while playing. Five themes are
+- Different [themes](/themes/) can be switched while playing. Five themes are
 included, but the user can add up to nine themes, following the same
 structure.
 - Best score
