@@ -28,6 +28,7 @@ jobs:
        - name: alire-project/setup-alire
          uses: alire-project/setup-alire@latest-stable
        - name: Update apt
+         if: runner.os == 'Linux'
          run: sudo apt-get update
        - name: Build
          run: alr build
@@ -45,6 +46,8 @@ jobs:
            target: native
        - name: alire-project/setup-alire
          uses: alire-project/setup-alire@latest-stable
+       - name: Update apt
+         run: sudo apt-get update
        - name: Build
          run: alr build
        - name: Build AppImage
