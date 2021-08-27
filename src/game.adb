@@ -9,11 +9,17 @@ package body Game is
    function Random_Int is new System.Random_Numbers.Random_Discrete(Integer);
    Generator : System.Random_Numbers.Generator;
 
+   use type Ada.Calendar.Time;
+
+   function Elapsed_Time (State : t_Board_State) return Duration is
+      (Ada.Calendar.Clock - State.Start_Time);
+
    procedure Reset_Game (State : out t_Board_State) is
    begin
-      State.Board  := (others => (others => 0));
-      State.Blanks := t_Cell_Count'Last;
-      State.Score  := 0;
+      State := (Board => (others => (others => 0)),
+                Blanks => t_Cell_Count'Last,
+                Score => 0,
+                Start_Time => Ada.Calendar.Clock);
    end Reset_Game;
 
    procedure Restart_Game (State : out t_Board_State) is

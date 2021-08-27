@@ -17,6 +17,7 @@ with Ada.Command_Line;
 with Ada.Strings.Fixed;
 with Ada.Directories;
 with Ada.Environment_Variables;
+with Ada.Calendar.Formatting;
 
 with Storage;
 with Game;
@@ -29,7 +30,9 @@ procedure Play_2048 is
    use Sf;
 
    -- ----- Keyboard management
-   type t_Keystroke is (Up, Down, Right, Left, Quit, Restart, Fullscreen_On_Off, Switch_Theme, Invalid);
+   type t_Keystroke is (Up, Down, Right, Left,
+                        Quit, Restart, Fullscreen_On_Off, Switch_Theme, Invalid);
+
    subtype t_Direction_Key is t_Keystroke range Up .. Left;
 
    function Get_Keystroke (Key_Code : Keyboard.sfKeyCode) return t_Keystroke is
@@ -48,7 +51,8 @@ procedure Play_2048 is
 
    State      : Game.t_Board_State;
    New_State  : Game.t_Board_State;
-   Best       : Natural := 0;
+   Best_Score : Natural := 0;
+   Best_Time  : Duration := Ada.Calendar.Day_Duration'Last;
    Video_Mode : constant VideoMode.sfVideoMode := (800, 600, 32);
    App_Win    : SfRenderWindow_Ptr;
    Icon       : sfImage_Ptr;
@@ -80,10 +84,10 @@ procedure Play_2048 is
 
    function Create_Window return SfRenderWindow_Ptr is
       (RenderWindow.create
-	    (mode  => Video_Mode,
-	     title => "2048 Game!",
-	     style => (if Fullscreen then Sf.Window.Window.sfFullscreen
-	               else Sf.Window.Window.sfDefaultStyle)));
+        (mode  => Video_Mode,
+         title => "2048 Game!",
+         style => (if Fullscreen then Sf.Window.Window.sfFullscreen
+                   else Sf.Window.Window.sfDefaultStyle)));
 
    procedure Display_Text (Message : String) is
       Board_Center : constant Float := Float (Margin + Board_Size / 2);
@@ -111,7 +115,12 @@ procedure Play_2048 is
            (Source => Value, Target => Target, Justify => Ada.Strings.Center);
          return Target;
       end Center;
+
       Board : Game.t_Board renames State.Board;
+      Elapsed_Time : constant string := Ada.Calendar.Formatting.Image
+        (Elapsed_Time => Game.Elapsed_Time (State));
+      Best_Time_Image : constant String := Ada.Calendar.Formatting.Image
+        (Elapsed_Time => Best_Time);
    begin
       if Text_UI then
          Put_Line (Horizontal_Rule);
@@ -122,7 +131,10 @@ procedure Play_2048 is
             Put_Line("|");
             Put_Line (Horizontal_Rule);
          end loop;
-         Put_Line("Score =" & State.Score'Image & "  Best Score =" & Best'Image);
+         Put_Line("Score =" & State.Score'Image &
+                    "  Time = " & Elapsed_Time &
+                    "  Best Score =" & Best_Score'Image &
+                    "  Best Time = " & Best_Time_Image);
       end if;
 
       RenderWindow.clear(App_Win, sfWhite);
@@ -144,7 +156,9 @@ procedure Play_2048 is
       end loop;
 
       Text.setString (Score_Text, "Score" & ASCII.LF & State.Score'Image & ASCII.LF & ASCII.LF &
-                        "Best score" & ASCII.LF & Best'Image);
+                        "Best score" & ASCII.LF & Best_Score'Image & ASCII.LF & ASCII.LF &
+                        "Time" & ASCII.LF & " " & Elapsed_Time & ASCII.LF & ASCII.LF &
+                        "Best time" & ASCII.LF & " " & Best_Time_Image);
       Text.setPosition (Score_Text,
                         (x => Float (Pane_Center) - Text.getLocalBounds (Score_Text).width / 2.0,
                          y => Float (Margin)));
@@ -220,6 +234,7 @@ procedure Play_2048 is
       Sprite.setTexture (Game_Sprite, Game_Image);
 
       Set_Text_Style (Score_Text);
+      Text.setLineSpacing (Score_Text, 0.85);
       Set_Text_Style (Game_Text);
 
       RenderWindow.setIcon
@@ -249,7 +264,8 @@ begin
    Text.setCharacterSize (Game_Text, Text.getCharacterSize (Game_Text) * 2);
 
 
-   Best := Storage.Best_Score;
+   Best_Score := Storage.Best_Score;
+   Best_Time := Storage.Best_Time;
 
    Main_Loop:
    loop
@@ -298,8 +314,8 @@ begin
                            State => State,
                            New_State => New_State);
 
-                        if New_State.Score > Best then
-                           Best := New_State.Score;
+                        if New_State.Score > Best_Score then
+                           Best_Score := New_State.Score;
                         end if;
 
                      when Fullscreen_On_Off =>
@@ -338,6 +354,8 @@ begin
             Has_Changed := False;
          elsif Game.Has_Won (New_State.Board) then
             State := New_State;
+            Best_Time := Duration'Min (Game.Elapsed_Time (New_State),
+                                       Best_Time);
             Display_Board (Message => "You win!");
             Has_Changed := False;
             exit Game_Loop;
@@ -354,7 +372,8 @@ begin
    end loop Main_Loop;
 
    Storage.Save_State
-     (Best_Score => Best,
+     (Best_Score => Best_Score,
+      Best_Time => Best_Time,
       Fullscreen_Mode => Fullscreen,
       Theme => Natural (Theme),
       Game_State => State);

@@ -1,3 +1,5 @@
+with Ada.Calendar;
+
 package Game is
 
    type t_Direction is (Up, Down, Right, Left);
@@ -15,7 +17,10 @@ package Game is
       Board : t_Board;
       Score : Natural;
       Blanks : t_Cell_Count;
+      Start_Time : Ada.Calendar.Time;
    end record;
+
+   function Elapsed_Time (State : t_Board_State) return Duration;
 
    procedure Reset_Game (State : out t_Board_State);
    procedure Restart_Game (State : out t_Board_State);

@@ -2,18 +2,22 @@ with Ada.Directories;
 with Ada.Text_IO;
 with Ada.Strings.Unbounded;
 with Ada.Environment_Variables;
+with Ada.Calendar;
 
 with TOML.File_IO;
 
 package body Storage is
 
    use TOML;
+   use type Ada.Calendar.Time;
 
    Best_Score_Key : constant String := "best_score";
    Fullscreen_Mode_Key : constant String := "fullscreen_mode";
    Theme_Key : constant String := "theme_id";
    Board_State_Key : constant String := "board_state";
    Score_Key : constant String := "score";
+   Elapsed_Key : constant String := "elapsed";
+   Best_Elapsed_Key : constant String := "best_elapsed";
 
    -- In Unix-like OS, save the configuration file as dot-file in the
    -- home as usual.  In others, save in current directory.
@@ -49,9 +53,35 @@ package body Storage is
    end Get_Natural;
 
 
+   function Get_Float
+     (Key     : String;
+      Default : Valid_Float) return Valid_Float is
+   begin
+      if Config /= No_TOML_Value and then
+        Config.Has (Key) then
+
+         return Config.Get (Key).As_Float.Value;
+      else
+         return Default;
+      end if;
+
+   exception
+      when Constraint_Error =>
+
+         Ada.Text_IO.Put_Line
+           (File => Ada.Text_IO.Standard_Error,
+            Item => "Error: invalid format for " & Key);
+
+         return Default;
+   end Get_Float;
+
 
    function Best_Score return Natural is
       (Get_Natural (Key => Best_Score_Key, Default => 0));
+
+   function Best_Time return Duration is
+     (Duration (Get_Float (Key => Best_Elapsed_Key,
+                           Default => Valid_Float (23 * 3600 + 3600 - 1))));
 
    function Theme return Natural is
       (Get_Natural (Key => Theme_Key, Default => 1));
@@ -110,6 +140,8 @@ package body Storage is
 
          Game_State.Score := Get_Natural (Key => Score_Key, Default => 0);
 
+         Game_State.Start_Time := Ada.Calendar.Clock -
+           Duration (Get_Float (Key => Elapsed_Key, Default => 0.0));
       else
 
          Game.Restart_Game (Game_State);
@@ -128,6 +160,7 @@ package body Storage is
 
    procedure Save_State
      (Best_Score : Natural;
+      Best_Time : Duration;
       Fullscreen_Mode : Boolean;
       Theme : Natural;
       Game_State : Game.t_Board_State) is
@@ -151,6 +184,12 @@ package body Storage is
       Config.Set (Key => Best_Score_Key,
                   Entry_Value => Create_Integer (Any_Integer (Best_Score)));
 
+      Config.Set (Key => Best_Elapsed_Key,
+                  Entry_Value => Create_Float
+                    ((Kind => Regular,
+                      Value => Valid_Float (Best_Time))));
+
+
       Config.Set (Key => Fullscreen_Mode_Key,
                   Entry_Value => Create_Boolean (Fullscreen_Mode));
 
@@ -163,7 +202,7 @@ package body Storage is
          for j in Game_State.Board(i)'range loop
 
             Board_State_Value.Append
-              (Item => Create_Integer (Any_Integer (Game_state.Board(i)(j))));
+              (Item => Create_Integer (Any_Integer (Game_State.Board(i)(j))));
          end loop;
       end loop;
 
@@ -171,7 +210,13 @@ package body Storage is
                   Entry_Value => Board_State_Value);
 
       Config.Set (Key => Score_Key,
-                  Entry_Value => Create_Integer (Any_Integer (Game_state.Score)));
+                  Entry_Value => Create_Integer (Any_Integer (Game_State.Score)));
+
+      Config.Set (Key => Elapsed_Key,
+                  Entry_Value => Create_Float
+                    ((Kind => Regular,
+                      Value => Valid_Float
+                        (Ada.Calendar."-" (Ada.Calendar.Clock, Game_State.Start_Time)))));
 
       TOML.File_IO.Dump_To_File (Config, File);
 
