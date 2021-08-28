@@ -10,7 +10,7 @@ using [ASFML](https://mgrojo.github.io/ASFML/) for graphics and
 - Different [themes](/themes/) can be switched while playing. Five themes are
 included, but the user can add up to nine themes, following the same
 structure.
-- Best score
+- Best score and best time
 - Fullscreen
 - Saving of the state
 

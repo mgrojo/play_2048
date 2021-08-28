@@ -52,7 +52,7 @@ procedure Play_2048 is
    State      : Game.t_Board_State;
    New_State  : Game.t_Board_State;
    Best_Score : Natural := 0;
-   Best_Time  : Duration := Ada.Calendar.Day_Duration'Last;
+   Best_Time  : Duration := Ada.Calendar.Day_Duration'Last - 1.0;
    Video_Mode : constant VideoMode.sfVideoMode := (800, 600, 32);
    App_Win    : SfRenderWindow_Ptr;
    Icon       : sfImage_Ptr;

@@ -79,9 +79,16 @@ package body Storage is
    function Best_Score return Natural is
       (Get_Natural (Key => Best_Score_Key, Default => 0));
 
+   -- Some versions of GNAT do not allow Duration values in
+   -- Ada.Calendar.Formatting greater or equal to 24h, so we can only
+   -- set here a maximum of 24h - 1s.  GNAT 10.3.0 works right and
+   -- supports up to 99h as required by the Standard.  23:59:59 should
+   -- be good as an initial Best Time to beat.
+   --
    function Best_Time return Duration is
      (Duration (Get_Float (Key => Best_Elapsed_Key,
-                           Default => Valid_Float (23 * 3600 + 3600 - 1))));
+                           Default => Valid_Float
+                             (Ada.Calendar.Day_Duration'Last - 1.0))));
 
    function Theme return Natural is
       (Get_Natural (Key => Theme_Key, Default => 1));
