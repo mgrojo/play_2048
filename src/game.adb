@@ -53,16 +53,34 @@ package body Game is
       New_State : out t_Board_State) is
 
       -- Moving and merging will always be performed leftward, hence the following transforms
-      function HFlip (What : in t_Row) return t_Row is
-        (What(4), What(3), What(2), What(1));
-      function VFlip (What : in t_Board) return t_Board is
-        (HFlip(What(1)), HFlip(What(2)), HFlip(What(3)), HFlip(What(4)));
+      function Flip_Row (What : in t_Row) return t_Row is
+         i : Natural := 0;
+      begin
+         return Result : t_Row do
+            for Cell of reverse Result loop
+               i := i + 1;
+               Cell := What (i);
+            end loop;
+         end return;
+      end Flip_Row;
+
+      function Flip_Board (What : in t_Board) return t_Board is
+         i : Natural := 0;
+      begin
+         return Result : t_Board do
+            for Row of Result loop
+               i := i + 1;
+               Row := Flip_Row (What (i));
+            end loop;
+         end return;
+      end Flip_Board;
+
       function Transpose (What : in t_Board) return t_Board is
       begin
-         return Answer : t_Board do
+         return Result : t_Board do
             for Row in t_Board'Range loop
                for Column in t_Row'Range loop
-                  Answer(Column)(Row) := What(Row)(Column);
+                  Result(Column)(Row) := What(Row)(Column);
                end loop;
             end loop;
          end return;
@@ -90,10 +108,13 @@ package body Game is
          else (1 => What(What'First)) & Merge(What(What'First+1..What'Last)));
 
       function Move (What : in t_Board) return t_Board is
-        (Merge(Move_Row(What(1))),
-         Merge(Move_Row(What(2))),
-         Merge(Move_Row(What(3))),
-         Merge(Move_Row(What(4))));
+      begin
+         return Result : t_Board do
+            for Row in t_Board'Range loop
+               Result (Row) := Merge (Move_Row (What (Row)));
+            end loop;
+         end return;
+      end Move;
 
    begin
       New_State := State;
@@ -102,13 +123,12 @@ package body Game is
          when Left  =>
             New_State.Board := Move (State.Board);
          when Right =>
-            New_State.Board := VFlip (Move (VFlip (State.Board)));
+            New_State.Board := Flip_Board (Move (Flip_Board (State.Board)));
          when Up    =>
             New_State.Board := Transpose (Move (Transpose (State.Board)));
          when Down  =>
-            New_State.Board := Transpose (VFlip (Move (VFlip (Transpose (State.Board)))));
+            New_State.Board := Transpose (Flip_Board (Move (Flip_Board (Transpose (State.Board)))));
       end case;
-
 
    end Move;
 
