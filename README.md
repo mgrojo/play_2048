@@ -13,6 +13,7 @@ structure.
 - Best score and best time
 - Fullscreen
 - Saving of the state
+- Undo last move
 
 # How to build
 
@@ -29,11 +30,15 @@ Keys:
 - R - restart game
 - Q - quit game
 - Arrow keys - move tiles
+- U - undo last move
 - F11 - toggle fullscreen mode
 - Tab - switch theme
 
 # Attribution
 
-The initial implementation of the game logic was taken from [Rosetta Code](https://rosettacode.org/wiki/2048).
+The initial implementation of the game logic was taken from [Rosetta
+Code](https://rosettacode.org/wiki/2048), although it has been mostly
+rewritten.
 
-Fonts used in the themes: Noto Serif (SIL Open Font License) for Theme 5 and DeJa Vu Sans (MIT License) for the rest.
+Fonts used in the themes: Noto Serif (SIL Open Font License) for Theme
+5 and DeJa Vu Sans (MIT License) for the rest.
