@@ -31,7 +31,8 @@ procedure Play_2048 is
 
    -- ----- Keyboard management
    type t_Keystroke is (Up, Down, Right, Left,
-                        Quit, Restart, Fullscreen_On_Off, Switch_Theme, Invalid);
+                        Quit, Restart, Fullscreen_On_Off, Switch_Theme, Undo,
+                        Invalid);
 
    subtype t_Direction_Key is t_Keystroke range Up .. Left;
 
@@ -45,41 +46,44 @@ procedure Play_2048 is
          when Keyboard.sfKeyA | Keyboard.sfKeyUp => Up,
          when Keyboard.sfKeyS | Keyboard.sfKeyDown => Down,
          when Keyboard.sfKeyD | Keyboard.sfKeyRight => Right,
+         when Keyboard.sfKeyU => Undo,
          when others => Invalid);
 
    type t_Theme is range 1 .. 9;
 
-   State      : Game.t_Board_State;
-   New_State  : Game.t_Board_State;
-   Best_Score : Natural := 0;
-   Best_Time  : Duration := Ada.Calendar.Day_Duration'Last - 1.0;
-   Video_Mode : constant VideoMode.sfVideoMode := (800, 600, 32);
-   App_Win    : SfRenderWindow_Ptr;
-   Icon       : sfImage_Ptr;
-   App_Event  : Event.sfEvent;
+   State       : Game.t_Board_State;
+   New_State   : Game.t_Board_State;
+   Old_State   : Game.t_Board_State;
+   Best_Score  : Natural := 0;
+   Best_Time   : Duration := Ada.Calendar.Day_Duration'Last - 1.0;
+   Video_Mode  : constant VideoMode.sfVideoMode := (800, 600, 32);
+   App_Win     : SfRenderWindow_Ptr;
+   Icon        : sfImage_Ptr;
+   App_Event   : Event.sfEvent;
    Has_Changed : Boolean := True;
-   Tiles      : sfTexture_Ptr;
-   Tile_Size  : constant := 128;
-   Board_Size : constant Positive := Tile_Size * Game.t_Board'Length;
-   Margin     : constant Positive := (Positive (Video_Mode.Height) - Board_Size) / 2;
+   Tiles       : sfTexture_Ptr;
+   Tile_Size   : constant := 128;
+   Board_Size  : constant Positive := Tile_Size * Game.t_Board'Length;
+   Margin      : constant Positive := (Positive (Video_Mode.Height) - Board_Size) / 2;
    Pane_Center : constant Positive := Positive (Video_Mode.Width) -
      (Positive (Video_Mode.Width) - Board_Size - Margin) / 2;
    Tile_Sprite : constant sfSprite_Ptr := Sprite.create;
    Game_Sprite : constant sfSprite_Ptr := Sprite.create;
-   Game_Image : sfTexture_Ptr;
-   Game_Font  : sfFont_Ptr;
-   Score_Text : constant sfText_Ptr := Text.create;
-   Game_Text  : constant sfText_Ptr := Text.create;
-   Text_UI    : Boolean := False;
-   Help       : constant String :=
+   Game_Image  : sfTexture_Ptr;
+   Game_Font   : sfFont_Ptr;
+   Score_Text  : constant sfText_Ptr := Text.create;
+   Game_Text   : constant sfText_Ptr := Text.create;
+   Text_UI     : Boolean := False;
+   Help        : constant String :=
      "Arrows: move" & ASCII.LF &
+     "U: undo" & ASCII.LF &
      "R: restart game" & ASCII.LF &
      "Q: quit game" & ASCII.LF &
      "F11: fullscreen" & ASCII.LF &
      "Tab: next theme";
 
    Fullscreen : Boolean := Storage.Fullscreen_Mode;
-   Theme : t_Theme := t_theme (Storage.Theme);
+   Theme      : t_Theme := t_theme (Storage.Theme);
    First_Time : Boolean := True;
 
    function Create_Window return SfRenderWindow_Ptr is
@@ -272,6 +276,7 @@ begin
 
       if First_Time then
          Storage.Restore_Game (State);
+         Old_State := State;
          First_Time := False;
       else
          Game.Restart_Game (State);
@@ -336,9 +341,16 @@ begin
                         Display_Board (Message => "Theme" & Theme'Image);
                         Has_Changed := False;
 
+                     when Undo =>
+
+                        State := Old_State;
+                        Display_Board (Message => "Undone!");
+                        Has_Changed := False;
+
                      when Invalid =>
                         Display_Board (Message => Help);
                         Has_Changed := False;
+
                   end case;
 
                when others =>
@@ -353,6 +365,7 @@ begin
             Display_Board (Message => "Invalid move...");
             Has_Changed := False;
          elsif Game.Has_Won (New_State.Board) then
+            Old_State := State;
             State := New_State;
             Best_Time := Duration'Min (Game.Elapsed_Time (New_State),
                                        Best_Time);
@@ -360,6 +373,7 @@ begin
             Has_Changed := False;
             exit Game_Loop;
          else
+            Old_State := State;
             State := New_State;
             Game.Add_Block (State); -- OK since the board has changed
             if Game.Has_Lost (State) then
