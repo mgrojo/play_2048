@@ -1,10 +1,12 @@
 *~
 *.ali
 *.o
+*.stderr
+*.stdout
 obj/
 alire/
-alire.lock
 play_2048
 play_2048.toml
 AppDir/
 *.AppImage
+config/
