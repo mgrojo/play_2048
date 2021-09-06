@@ -5,6 +5,8 @@ game](https://github.com/gabrielecirulli/2048), implemented in Ada
 using [ASFML](https://mgrojo.github.io/ASFML/) for graphics and
 [ada-toml](https://github.com/pmderodat/ada-toml) for saving state.
 
+It has been tested under Windows 10 and Ubuntu Linux 20.04.
+
 # Features
 
 - Different [themes](/themes/) can be switched while playing. Five themes are
@@ -19,7 +21,8 @@ structure.
 
 - Install [Alire](https://alire.ada.dev/)
 - Build using `alr build`. All the dependencies are installed and managed by Alire.
-- Run directly from the working directory: `./play_2048`
+- Run using `alr run` (mandatory in Windows so it find installed libraries) or
+  directly from the working directory: `./play_2048` (Linux only).
 
 # How to play
 Use arrow keys to move tiles. When two adjacent tiles with the same number are merged, their numbers
