@@ -1,5 +1,7 @@
 [![Build](https://github.com/mgrojo/play_2048/actions/workflows/main.yml/badge.svg)](https://github.com/mgrojo/play_2048/actions/workflows/main.yml)
 
+![Screenshot of Play 2048!](/images/screenshot_linux_4x4.png)
+
 This is yet another implementation of the [2048
 game](https://github.com/gabrielecirulli/2048), implemented in Ada
 using [ASFML](https://mgrojo.github.io/ASFML/) for graphics and
