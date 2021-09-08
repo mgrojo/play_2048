@@ -19,9 +19,9 @@ structure.
 - Saving of the state
 - Undo last move
 - Three board sizes:
- - Small (3x3): difficult, beat your score!
- - Default (4x4): normal, you can do it!
- - Easy (5x5): easy, beat your best time!
+  - Small (3x3): difficult, beat your score!
+  - Default (4x4): normal, you can do it!
+  - Easy (5x5): easy, beat your best time!
 
 # How to build
 
@@ -46,12 +46,12 @@ export PLAY_2048_SIZE=3
 After a change in the board size, the board state will not be restored.
 
 Keys:
-- R - restart game
-- Q - quit game
+- <kbd>R</kbd> - restart game
+- <kbd>Q</kbd> - quit game
 - Arrow keys - move tiles
-- U - undo last move
-- F11 - toggle fullscreen mode
-- Tab - switch theme
+- <kbd>U</kbd> - undo last move
+- <kbd>F11</kbd> - toggle fullscreen mode
+- <kbd>Tab</kbd> - switch theme
 
 # Attribution
 
