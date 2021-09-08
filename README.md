@@ -16,6 +16,10 @@ structure.
 - Fullscreen
 - Saving of the state
 - Undo last move
+- Three board sizes:
+ - Small (3x3): difficult, beat your score!
+ - Default (4x4): normal, you can do it!
+ - Easy (5x5): easy, beat your best time!
 
 # How to build
 
@@ -25,9 +29,19 @@ structure.
   directly from the working directory: `./play_2048` (Linux only).
 
 # How to play
+
 Use arrow keys to move tiles. When two adjacent tiles with the same number are merged, their numbers
 add up. Keep merging tiles until you get to 2048. If the board is full and there is no possible move
 (no adjacent tiles with the same number), you lose.
+
+To change the board size, export the enviroment variable
+PLAY_2048_SIZE to the number of cells per size, for example, in
+Linux/Bash:
+
+```bash
+export PLAY_2048_SIZE=3
+```
+After a change in the board size, the board state will not be restored.
 
 Keys:
 - R - restart game

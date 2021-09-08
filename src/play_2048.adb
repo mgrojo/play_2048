@@ -29,7 +29,6 @@ procedure Play_2048 is
    use Sf.Window;
    use Sf;
 
-   -- ----- Keyboard management
    type t_Keystroke is (Up, Down, Right, Left,
                         Quit, Restart, Fullscreen_On_Off, Switch_Theme, Undo,
                         Invalid);
@@ -51,12 +50,22 @@ procedure Play_2048 is
 
    type t_Theme is range 1 .. 9;
 
+   Not_Supported_Size : exception;
+
+   function Adjusted_Video_Mode return VideoMode.sfVideoMode is
+     (case Game.Board_Length is
+         when Game.Default_Length - 1 => ( 640, 480, 32),
+         when Game.Default_Length     => ( 800, 600, 32),
+         when Game.Default_Length + 1 => (1024, 768, 32),
+         when others =>
+            raise Not_Supported_Size with "Board size is too low or too high");
+
    State       : Game.t_Board_State;
    New_State   : Game.t_Board_State;
    Old_State   : Game.t_Board_State;
    Best_Score  : Natural := 0;
    Best_Time   : Duration := Ada.Calendar.Day_Duration'Last - 1.0;
-   Video_Mode  : constant VideoMode.sfVideoMode := (800, 600, 32);
+   Video_Mode  : constant VideoMode.sfVideoMode := Adjusted_Video_Mode;
    App_Win     : SfRenderWindow_Ptr;
    Icon        : sfImage_Ptr;
    App_Event   : Event.sfEvent;
@@ -151,9 +160,13 @@ procedure Play_2048 is
                                                             else Log (X    => Float (Cell),
                                                                       Base => 2.0));
             begin
-               Sprite.setTextureRect(Tile_Sprite, (Sprite_Offset * Tile_Size, 0, Tile_Size, Tile_Size));
-               Sprite.setPosition(Tile_Sprite, (x => Float(Margin + (j - 1) * Tile_Size),
-                                                y => Float(Margin + (i - 1) * Tile_Size)));
+               Sprite.setTextureRect(Tile_Sprite,
+                                     (Sprite_Offset * Tile_Size, 0, Tile_Size, Tile_Size));
+
+               Sprite.setPosition(Tile_Sprite,
+                                  (x => Float(Margin + (j - 1) * Tile_Size),
+                                   y => Float(Margin + (i - 1) * Tile_Size)));
+
                RenderWindow.drawSprite(App_Win, Tile_Sprite);
             end;
          end loop;
@@ -168,12 +181,15 @@ procedure Play_2048 is
                          y => Float (Margin)));
       RenderWindow.drawText (App_Win, Score_Text);
 
-      Sprite.setPosition(Game_Sprite,
-                         (x => Float (Pane_Center -
-                                        Positive (Image.getSize (Icon).x) / 2),
-                          y => Float (Positive (Video_Mode.Height) - Margin -
-                                        Positive (Image.getSize (Icon).y))));
-      RenderWindow.drawSprite(App_Win, Game_Sprite);
+      if Game.Board_Length >= Game.Default_Length then
+
+         Sprite.setPosition(Game_Sprite,
+                            (x => Float (Pane_Center -
+                                           Positive (Image.getSize (Icon).x) / 2),
+                             y => Float (Positive (Video_Mode.Height) - Margin -
+                                           Positive (Image.getSize (Icon).y))));
+         RenderWindow.drawSprite(App_Win, Game_Sprite);
+      end if;
 
       if Message /= "" then
          Display_Text(Message);
@@ -265,8 +281,9 @@ begin
 
    Load_Theme;
 
-   Text.setCharacterSize (Game_Text, Text.getCharacterSize (Game_Text) * 2);
-
+   if Game.Board_Length >= Game.Default_Length then
+      Text.setCharacterSize (Game_Text, Text.getCharacterSize (Game_Text) * 2);
+   end if;
 
    Best_Score := Storage.Best_Score;
    Best_Time := Storage.Best_Time;

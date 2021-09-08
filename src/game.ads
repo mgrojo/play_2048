@@ -1,10 +1,18 @@
 with Ada.Calendar;
+with Ada.Environment_Variables;
 
 package Game is
 
    type t_Direction is (Up, Down, Right, Left);
 
-   Board_Length : constant := 4;
+   Environment_Size : constant String := "PLAY_2048_SIZE";
+
+   Default_Length : constant := 4;
+
+   Board_Length : constant Natural :=
+     (if Ada.Environment_Variables.Exists (Environment_Size) then
+         Natural'Value (Ada.Environment_Variables.Value (Environment_Size))
+      else Default_Length);
 
    subtype t_Board_Size is Natural range 1 .. Board_Length;
    subtype t_Cell_Count is Natural range 0 .. Board_Length ** 2;

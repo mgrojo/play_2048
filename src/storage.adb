@@ -129,21 +129,34 @@ package body Storage is
 
          Board_State_Value := Config.Get (Board_State_Key);
 
-         for i in Game_State.Board'range loop
-            for j in Game_State.Board(i)'range loop
+         if Board_State_Value.Length /= Game.t_Cell_Count'Last then
 
-               Game_State.Board (i)(j) :=
-                 Natural (Board_State_Value.Item
-                            (Index).As_Integer);
+            Ada.Text_IO.Put_Line
+              (File => Ada.Text_IO.Standard_Error,
+               Item => "Warning: Board size has changed, " &
+                 Board_State_Key &
+                 " is not restored");
 
-               Index := Index + 1;
+            Game.Restart_Game (Game_State);
+         else
 
-               if Game_State.Board (i)(j) /= 0 then
-                  Game_State.Blanks := Game_State.Blanks - 1;
-               end if;
+            for i in Game_State.Board'range loop
+               for j in Game_State.Board(i)'range loop
 
+                  Game_State.Board (i)(j) :=
+                    Natural (Board_State_Value.Item
+                               (Index).As_Integer);
+
+                  Index := Index + 1;
+
+                  if Game_State.Board (i)(j) /= 0 then
+                     Game_State.Blanks := Game_State.Blanks - 1;
+                  end if;
+
+               end loop;
             end loop;
-         end loop;
+
+         end if;
 
          Game_State.Score := Get_Natural (Key => Score_Key, Default => 0);
 
@@ -161,16 +174,16 @@ package body Storage is
                                "Error: invalid format for " &
                                  Board_State_Key);
 
-      Game.Reset_Game (Game_State);
+      Game.Restart_Game (Game_State);
 
    end Restore_Game;
 
    procedure Save_State
-     (Best_Score : Natural;
-      Best_Time : Duration;
+     (Best_Score      : Natural;
+      Best_Time       : Duration;
       Fullscreen_Mode : Boolean;
-      Theme : Natural;
-      Game_State : Game.t_Board_State) is
+      Theme           : Natural;
+      Game_State      : Game.t_Board_State) is
 
       File : Ada.Text_IO.File_Type;
       Board_State_Value : TOML_Value;
@@ -191,9 +204,9 @@ package body Storage is
       Config.Set (Key => Best_Score_Key,
                   Entry_Value => Create_Integer (Any_Integer (Best_Score)));
 
-      Config.Set (Key => Best_Elapsed_Key,
+      Config.Set (Key         => Best_Elapsed_Key,
                   Entry_Value => Create_Float
-                    ((Kind => Regular,
+                    ((Kind  => Regular,
                       Value => Valid_Float (Best_Time))));
 
 
