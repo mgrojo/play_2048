@@ -127,6 +127,11 @@ package body Storage is
 
          Game.Reset_Game (Game_State);
 
+         Game_State.Score := Get_Natural (Key => Score_Key, Default => 0);
+
+         Game_State.Start_Time := Ada.Calendar.Clock -
+           Duration (Get_Float (Key => Elapsed_Key, Default => 0.0));
+
          Board_State_Value := Config.Get (Board_State_Key);
 
          if Board_State_Value.Length /= Game.t_Cell_Count'Last then
@@ -158,10 +163,6 @@ package body Storage is
 
          end if;
 
-         Game_State.Score := Get_Natural (Key => Score_Key, Default => 0);
-
-         Game_State.Start_Time := Ada.Calendar.Clock -
-           Duration (Get_Float (Key => Elapsed_Key, Default => 0.0));
       else
 
          Game.Restart_Game (Game_State);
