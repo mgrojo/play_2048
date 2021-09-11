@@ -31,7 +31,7 @@ procedure Play_2048 is
 
    type t_Keystroke is (Up, Down, Right, Left,
                         Quit, Restart, Fullscreen_On_Off, Switch_Theme, Undo,
-                        Invalid);
+                        Nothing, Invalid);
 
    subtype t_Direction_Key is t_Keystroke range Up .. Left;
 
@@ -46,6 +46,8 @@ procedure Play_2048 is
          when Keyboard.sfKeyS | Keyboard.sfKeyDown => Down,
          when Keyboard.sfKeyD | Keyboard.sfKeyRight => Right,
          when Keyboard.sfKeyU => Undo,
+         -- Modifier keys should not trigger anything.
+         when Keyboard.sfKeyLControl .. Keyboard.sfKeyRAlt => Nothing,
          when others => Invalid);
 
    type t_Theme is range 1 .. 9;
@@ -362,6 +364,9 @@ begin
 
                         State := Old_State;
                         Display_Board (Message => "Undone!");
+                        Has_Changed := False;
+                     when Nothing =>
+
                         Has_Changed := False;
 
                      when Invalid =>
