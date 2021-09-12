@@ -67,6 +67,7 @@ procedure Play_2048 is
    Old_State   : Game.t_Board_State;
    Best_Score  : Natural := 0;
    Best_Time   : Duration := Ada.Calendar.Day_Duration'Last - 1.0;
+   Last_Elapsed_Time : Duration := 0.0;
    Video_Mode  : constant VideoMode.sfVideoMode := Adjusted_Video_Mode;
    App_Win     : SfRenderWindow_Ptr;
    Icon        : sfImage_Ptr;
@@ -103,6 +104,25 @@ procedure Play_2048 is
          title => "2048 Game!",
          style => (if Fullscreen then Sf.Window.Window.sfFullscreen
                    else Sf.Window.Window.sfDefaultStyle)));
+
+
+   procedure Draw_Scoreboard is
+      Elapsed_Time : constant string := Ada.Calendar.Formatting.Image
+        (Elapsed_Time => Game.Elapsed_Time (State));
+      Best_Time_Image : constant String := Ada.Calendar.Formatting.Image
+        (Elapsed_Time => Best_Time);
+   begin
+
+      Text.setString (Score_Text, "Score" & ASCII.LF & State.Score'Image & ASCII.LF & ASCII.LF &
+                        "Best score" & ASCII.LF & Best_Score'Image & ASCII.LF & ASCII.LF &
+                        "Time" & ASCII.LF & " " & Elapsed_Time & ASCII.LF & ASCII.LF &
+                        "Best time" & ASCII.LF & " " & Best_Time_Image);
+      Text.setPosition (Score_Text,
+                        (x => Float (Pane_Center) - Text.getLocalBounds (Score_Text).width / 2.0,
+                         y => Float (Margin)));
+      RenderWindow.drawText (App_Win, Score_Text);
+
+   end Draw_Scoreboard;
 
    procedure Display_Text (Message : String) is
       Board_Center : constant Float := Float (Margin + Board_Size / 2);
@@ -174,14 +194,7 @@ procedure Play_2048 is
          end loop;
       end loop;
 
-      Text.setString (Score_Text, "Score" & ASCII.LF & State.Score'Image & ASCII.LF & ASCII.LF &
-                        "Best score" & ASCII.LF & Best_Score'Image & ASCII.LF & ASCII.LF &
-                        "Time" & ASCII.LF & " " & Elapsed_Time & ASCII.LF & ASCII.LF &
-                        "Best time" & ASCII.LF & " " & Best_Time_Image);
-      Text.setPosition (Score_Text,
-                        (x => Float (Pane_Center) - Text.getLocalBounds (Score_Text).width / 2.0,
-                         y => Float (Margin)));
-      RenderWindow.drawText (App_Win, Score_Text);
+      Draw_Scoreboard;
 
       if Game.Board_Length >= Game.Default_Length then
 
@@ -198,6 +211,8 @@ procedure Play_2048 is
       end if;
 
       RenderWindow.display(App_Win);
+
+      Last_Elapsed_Time := Game.Elapsed_Time (New_State);
 
    end Display_Board;
 
@@ -281,6 +296,8 @@ begin
 
    App_Win := Create_Window;
 
+   renderWindow.setFramerateLimit (App_Win, 30);
+
    Load_Theme;
 
    if Game.Board_Length >= Game.Default_Length then
@@ -308,7 +325,7 @@ begin
             Display_Board;
          end if;
 
-         if RenderWindow.waitEvent (App_Win, event => App_Event) /= sfTrue then
+         if RenderWindow.pollEvent (App_Win, event => App_Event) /= sfTrue then
             Has_Changed := False;
          else
             Has_Changed := True;
@@ -382,7 +399,14 @@ begin
          end if;
 
          if not Has_Changed then
-            null;
+
+            if Game.Elapsed_Time (New_State) - Last_Elapsed_Time > 1.0 then
+               --  Draw_Scoreboard;
+               --  RenderWindow.display(App_Win);
+               Display_Board;
+               --Last_Elapsed_Time := Game.Elapsed_Time (New_State);
+            end if;
+
          elsif Game."=" (New_State.Board, State.Board) then
             Display_Board (Message => "Invalid move...");
             Has_Changed := False;
