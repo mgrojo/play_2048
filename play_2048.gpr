@@ -18,7 +18,8 @@ project Play_2048 is
         ("-g",
          "-gnatQ",
          "-gnatwa",  -- All warnings
-         "-gnatVa");  -- All validity checks
+         "-gnatVa",  -- All validity checks
+         "-O1");
    end Compiler;
 
 end Play_2048;
