@@ -163,6 +163,8 @@ package body Storage is
 
          end if;
 
+         Game.Update_Status (Game_State);
+
       else
 
          Game.Restart_Game (Game_State);
@@ -175,7 +177,7 @@ package body Storage is
                                "Error: invalid format for " &
                                  Board_State_Key);
 
-      Game.Restart_Game (Game_State);
+         Game.Restart_Game (Game_State);
 
    end Restore_Game;
 

@@ -16,10 +16,11 @@ package body Game is
 
    procedure Reset_Game (State : out t_Board_State) is
    begin
-      State := (Board => (others => (others => 0)),
-                Blanks => t_Cell_Count'Last,
-                Score => 0,
-                Start_Time => Ada.Calendar.Clock);
+      State := (Board      => (others => (others => 0)),
+                Blanks     => t_Cell_Count'Last,
+                Score      => 0,
+                Start_Time => Ada.Calendar.Clock,
+                Game_Status => Playing);
    end Reset_Game;
 
    procedure Restart_Game (State : out t_Board_State) is
@@ -28,6 +29,27 @@ package body Game is
       Add_Block (State);
       Add_Block (State);
    end Restart_Game;
+
+   function Has_2048 (Board : t_Board) return Boolean is
+     (for some Row of Board => (for some Cell of Row => Cell = 2048));
+
+   function Has_No_Move (State : t_Board_State) return Boolean is
+     (State.Blanks = 0
+        and then (for all Row in t_Board_Size =>
+                    (for all Column in 1 .. t_Board_Size'Last - 1 =>
+                       (State.Board(Row)(Column) /= State.Board(Row)(Column+1))))
+        and then (for all Row in 1 .. t_Board_Size'Last - 1 =>
+                    (for all Column in t_Board_Size =>
+                       (State.Board(Row)(Column) /= State.Board(Row+1)(Column)))));
+
+   procedure Update_Status (State : in out t_Board_State) is
+   begin
+      State.Game_Status :=
+        (if Has_2048 (State.Board) then Won
+         elsif Has_No_Move (State) then Lost
+         else Playing);
+   end Update_Status;
+
 
    procedure Add_Block (State : in out t_Board_State) is
       Block_Offset : Positive := Random_Int (Generator, 1, State.Blanks);
@@ -45,6 +67,11 @@ package body Game is
             end if;
          end loop;
       end loop;
+
+      if Has_No_Move (State) then
+         State.Game_Status := Lost;
+      end if;
+
    end Add_Block;
 
    procedure Move
@@ -129,6 +156,8 @@ package body Game is
          when Down  =>
             New_State.Board := Transpose (Flip_Board (Move (Flip_Board (Transpose (State.Board)))));
       end case;
+
+      Update_Status (New_State);
 
    end Move;
 

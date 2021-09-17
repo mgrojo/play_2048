@@ -207,12 +207,20 @@ procedure Play_2048 is
       end if;
 
       if Message /= "" then
-         Display_Text(Message);
+         Display_Text (Message);
+      elsif Game.Has_Won (State) then
+         Display_Text ("You win!");
+      elsif Game.Has_Lost (State) then
+         Display_Text ("You lose!");
       end if;
 
       RenderWindow.display(App_Win);
 
-      Last_Elapsed_Time := Game.Elapsed_Time (New_State);
+      Last_Elapsed_Time := Game.Elapsed_Time (State);
+
+      -- No Pending changes to be displayed.
+      --
+      Has_Changed := False;
 
    end Display_Board;
 
@@ -313,6 +321,7 @@ begin
       if First_Time then
          Storage.Restore_Game (State);
          Old_State := State;
+         New_State := State;
          First_Time := False;
       else
          Game.Restart_Game (State);
@@ -338,7 +347,6 @@ begin
                when Event.sfEvtResized =>
 
                   Display_Board;
-                  Has_Changed := False;
 
                when Event.sfEvtKeyPressed =>
 
@@ -349,14 +357,19 @@ begin
                         exit Main_Loop;
                      when t_Direction_Key =>
 
-                        Game.Move
-                          (Direction =>
-                             To_Direction (Get_Keystroke (Key_Code => App_Event.key.code)),
-                           State => State,
-                           New_State => New_State);
+                        if Game."=" (State.Game_Status, Game.Playing) then
 
-                        if New_State.Score > Best_Score then
-                           Best_Score := New_State.Score;
+                           Game.Move
+                             (Direction =>
+                                To_Direction (Get_Keystroke (Key_Code => App_Event.key.code)),
+                              State     => State,
+                              New_State => New_State);
+
+                           if New_State.Score > Best_Score then
+                              Best_Score := New_State.Score;
+                           end if;
+                        else
+                           exit Game_Loop;
                         end if;
 
                      when Fullscreen_On_Off =>
@@ -366,7 +379,6 @@ begin
                         App_Win := Create_Window;
 
                         Display_Board;
-                        Has_Changed := False;
 
                      when Switch_Theme =>
 
@@ -375,20 +387,18 @@ begin
                         Load_Theme;
 
                         Display_Board (Message => "Theme" & Theme'Image);
-                        Has_Changed := False;
 
                      when Undo =>
 
                         State := Old_State;
                         Display_Board (Message => "Undone!");
-                        Has_Changed := False;
+
                      when Nothing =>
 
                         Has_Changed := False;
 
                      when Invalid =>
                         Display_Board (Message => Help);
-                        Has_Changed := False;
 
                   end case;
 
@@ -400,43 +410,38 @@ begin
 
          if not Has_Changed then
 
-            if Game.Elapsed_Time (New_State) - Last_Elapsed_Time > 1.0 then
-               --  Draw_Scoreboard;
-               --  RenderWindow.display(App_Win);
+            if Game."=" (State.Game_Status, Game.Playing) and then
+              Game.Elapsed_Time (State) - Last_Elapsed_Time > 1.0 then
+
                Display_Board;
-               --Last_Elapsed_Time := Game.Elapsed_Time (New_State);
+            else
+               delay 0.001;
             end if;
 
          elsif Game."=" (New_State.Board, State.Board) then
             Display_Board (Message => "Invalid move...");
-            Has_Changed := False;
-         elsif Game.Has_Won (New_State.Board) then
-            Old_State := State;
-            State := New_State;
-            Best_Time := Duration'Min (Game.Elapsed_Time (New_State),
-                                       Best_Time);
-            Display_Board (Message => "You win!");
-            Has_Changed := False;
-            exit Game_Loop;
+
          else
             Old_State := State;
             State := New_State;
-            Game.Add_Block (State); -- OK since the board has changed
-            if Game.Has_Lost (State) then
-               Display_Board (Message => "You lose!");
-               Has_Changed := False;
-               exit Game_Loop;
+
+            if Game.Has_Won (New_State) then
+               Best_Time := Duration'Min (Game.Elapsed_Time (State),
+                                          Best_Time);
+            else
+               Game.Add_Block (State); -- OK since the board has changed
+               Game.Update_Status (State);
             end if;
          end if;
       end loop Game_Loop;
    end loop Main_Loop;
 
    Storage.Save_State
-     (Best_Score => Best_Score,
-      Best_Time => Best_Time,
+     (Best_Score      => Best_Score,
+      Best_Time       => Best_Time,
       Fullscreen_Mode => Fullscreen,
-      Theme => Natural (Theme),
-      Game_State => State);
+      Theme           => Natural (Theme),
+      Game_State      => State);
 
    RenderWindow.destroy (App_Win);
 
