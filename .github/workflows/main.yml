@@ -31,7 +31,7 @@ jobs:
          if: runner.os == 'Linux'
          run: sudo apt-get update
        - name: Build
-         run: alr build
+         run: alr build --non-interactive
          
   release:
     name: Continuous AppImage
@@ -49,7 +49,7 @@ jobs:
        - name: Update apt
          run: sudo apt-get update
        - name: Build
-         run: alr build
+         run: alr build --non-interactive
        - name: Build AppImage
          run: VERSION=${GITHUB_BASE_REF:-${GITHUB_REF#refs/heads/}} make AppImage
        - name: Create Release
