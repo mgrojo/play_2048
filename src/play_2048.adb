@@ -62,30 +62,36 @@ procedure Play_2048 is
          when others =>
             raise Not_Supported_Size with "Board size is too low or too high");
 
+   Video_Mode  : constant VideoMode.sfVideoMode := Adjusted_Video_Mode;
+   Height      : constant Float := Float (Video_Mode.Height);
+   Width       : constant Float := Float (Video_Mode.Width);
+
    State       : Game.t_Board_State;
    New_State   : Game.t_Board_State;
    Old_State   : Game.t_Board_State;
+   First_Time  : Boolean := True;
+   Has_Changed : Boolean := True;
+   Text_UI     : Boolean := False;
+
    Best_Score  : Natural := 0;
    Best_Time   : Duration := Ada.Calendar.Day_Duration'Last - 1.0;
    Last_Elapsed_Time : Duration := 0.0;
-   Video_Mode  : constant VideoMode.sfVideoMode := Adjusted_Video_Mode;
+
    App_Win     : SfRenderWindow_Ptr;
    Icon        : sfImage_Ptr;
    App_Event   : Event.sfEvent;
-   Has_Changed : Boolean := True;
    Tiles       : sfTexture_Ptr;
    Tile_Size   : constant := 128;
-   Board_Size  : constant Positive := Tile_Size * Game.t_Board'Length;
-   Margin      : constant Positive := (Positive (Video_Mode.Height) - Board_Size) / 2;
-   Pane_Center : constant Positive := Positive (Video_Mode.Width) -
-     (Positive (Video_Mode.Width) - Board_Size - Margin) / 2;
+   Board_Size  : constant Float := Float (Tile_Size * Game.t_Board'Length);
+   Margin      : constant Float := (Height - Board_Size) / 2.0;
+   Pane_Center : constant Float := Width -
+     (Width - Board_Size - Margin) / 2.0;
    Tile_Sprite : constant sfSprite_Ptr := Sprite.create;
    Game_Sprite : constant sfSprite_Ptr := Sprite.create;
    Game_Image  : sfTexture_Ptr;
    Game_Font   : sfFont_Ptr;
    Score_Text  : constant sfText_Ptr := Text.create;
    Game_Text   : constant sfText_Ptr := Text.create;
-   Text_UI     : Boolean := False;
    Help        : constant String :=
      "Arrows: move" & ASCII.LF &
      "U: undo" & ASCII.LF &
@@ -96,7 +102,6 @@ procedure Play_2048 is
 
    Fullscreen : Boolean := Storage.Fullscreen_Mode;
    Theme      : t_Theme := t_theme (Storage.Theme);
-   First_Time : Boolean := True;
 
    function Create_Window return SfRenderWindow_Ptr is
       (RenderWindow.create
@@ -105,27 +110,63 @@ procedure Play_2048 is
          style => (if Fullscreen then Sf.Window.Window.sfFullscreen
                    else Sf.Window.Window.sfDefaultStyle)));
 
+   function Move
+     (Value   : in String;
+      Length  : in Natural;
+      Justify : in Ada.Strings.Alignment) return String is
+
+      Target : String (1 .. Length);
+   begin
+      Ada.Strings.Fixed.Move
+        (Source => Value, Target => Target, Justify => Justify);
+      return Target;
+   end Move;
+
 
    procedure Draw_Scoreboard is
-      Elapsed_Time : constant string := Ada.Calendar.Formatting.Image
+
+      Elapsed_Time     : constant string := Ada.Calendar.Formatting.Image
         (Elapsed_Time => Game.Elapsed_Time (State));
-      Best_Time_Image : constant String := Ada.Calendar.Formatting.Image
+      Best_Time_Image  : constant String := Ada.Calendar.Formatting.Image
         (Elapsed_Time => Best_Time);
+
+      Score_Length : constant := 10;
+
+      Best_Score_Image : constant String :=
+        Move (Value   => Best_Score'Image,
+              Length  => Score_Length,
+              Justify => Ada.Strings.Center);
+      Score_Image      : constant String :=
+        Move (Value   => State.Score'Image,
+              Length  => Score_Length,
+              Justify => Ada.Strings.Center);
+
+      use ASCII;
    begin
 
-      Text.setString (Score_Text, "Score" & ASCII.LF & State.Score'Image & ASCII.LF & ASCII.LF &
-                        "Best score" & ASCII.LF & Best_Score'Image & ASCII.LF & ASCII.LF &
-                        "Time" & ASCII.LF & " " & Elapsed_Time & ASCII.LF & ASCII.LF &
-                        "Best time" & ASCII.LF & " " & Best_Time_Image);
+      if Text_UI then
+
+         Put_Line("Score =" & Score_Image &
+                    "  Time = " & Elapsed_Time &
+                    "  Best Score =" & Best_Score_Image &
+                    "  Best Time = " & Best_Time_Image);
+      end if;
+
+      Text.setString (Score_Text,
+                      "Score" & LF & Score_Image & LF & LF &
+                        "Best score" & LF & Best_Score_Image & LF & LF &
+                        "Time" & LF & " " & Elapsed_Time & LF & LF &
+                        "Best time" & LF & " " & Best_Time_Image);
       Text.setPosition (Score_Text,
-                        (x => Float (Pane_Center) - Text.getLocalBounds (Score_Text).width / 2.0,
-                         y => Float (Margin)));
+                        (x => Pane_Center -
+                           Text.getLocalBounds (Score_Text).width / 2.0,
+                         y => Margin));
       RenderWindow.drawText (App_Win, Score_Text);
 
    end Draw_Scoreboard;
 
    procedure Display_Text (Message : String) is
-      Board_Center : constant Float := Float (Margin + Board_Size / 2);
+      Board_Center : constant Float :=  Margin + Board_Size / 2.0;
 
    begin
       if Text_UI then
@@ -144,12 +185,7 @@ procedure Play_2048 is
    procedure Display_Board (Message : String := "") is
       Horizontal_Rule : constant String := "+----+----+----+----+";
       function Center (Value : in String) return String is
-         Target : String (1 .. 4);
-      begin
-         Ada.Strings.Fixed.Move
-           (Source => Value, Target => Target, Justify => Ada.Strings.Center);
-         return Target;
-      end Center;
+         (Move (Value, Length => 4, Justify => Ada.Strings.Center));
 
       Board : Game.t_Board renames State.Board;
       Elapsed_Time : constant string := Ada.Calendar.Formatting.Image
@@ -166,10 +202,7 @@ procedure Play_2048 is
             Put_Line("|");
             Put_Line (Horizontal_Rule);
          end loop;
-         Put_Line("Score =" & State.Score'Image &
-                    "  Time = " & Elapsed_Time &
-                    "  Best Score =" & Best_Score'Image &
-                    "  Best Time = " & Best_Time_Image);
+
       end if;
 
       RenderWindow.clear(App_Win, sfWhite);
@@ -186,8 +219,8 @@ procedure Play_2048 is
                                      (Sprite_Offset * Tile_Size, 0, Tile_Size, Tile_Size));
 
                Sprite.setPosition(Tile_Sprite,
-                                  (x => Float(Margin + (j - 1) * Tile_Size),
-                                   y => Float(Margin + (i - 1) * Tile_Size)));
+                                  (x => Margin + Float ((j - 1) * Tile_Size),
+                                   y => Margin + Float ((i - 1) * Tile_Size)));
 
                RenderWindow.drawSprite(App_Win, Tile_Sprite);
             end;
@@ -199,10 +232,10 @@ procedure Play_2048 is
       if Game.Board_Length >= Game.Default_Length then
 
          Sprite.setPosition(Game_Sprite,
-                            (x => Float (Pane_Center -
-                                           Positive (Image.getSize (Icon).x) / 2),
-                             y => Float (Positive (Video_Mode.Height) - Margin -
-                                           Positive (Image.getSize (Icon).y))));
+                            (x => Pane_Center -
+                               Float (Image.getSize (Icon).x / 2),
+                             y => Height - Margin -
+                                           Float (Image.getSize (Icon).y)));
          RenderWindow.drawSprite(App_Win, Game_Sprite);
       end if;
 
