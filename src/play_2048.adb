@@ -73,8 +73,8 @@ procedure Play_2048 is
    Has_Changed : Boolean := True;
    Text_UI     : Boolean := False;
 
-   Best_Score  : Natural := 0;
-   Best_Time   : Duration := Ada.Calendar.Day_Duration'Last - 1.0;
+   Best_Score        : Natural  := 0;
+   Best_Time         : Duration := Ada.Calendar.Day_Duration'Last - 1.0;
    Last_Elapsed_Time : Duration := 0.0;
 
    App_Win     : SfRenderWindow_Ptr;
@@ -174,9 +174,10 @@ procedure Play_2048 is
       end if;
 
       Text.setString (Game_Text, Message);
-      Text.setPosition (Game_Text,
-                        (x => Board_Center - Text.getLocalBounds (Game_Text).width / 2.0,
-                         y => Board_Center - Text.getLocalBounds (Game_Text).height / 2.0));
+      Text.setPosition
+        (Game_Text,
+         (x => Board_Center - Text.getLocalBounds (Game_Text).width / 2.0,
+          y => Board_Center - Text.getLocalBounds (Game_Text).height / 2.0));
       RenderWindow.drawText (App_Win, Game_Text);
 
    end Display_Text;
@@ -211,12 +212,16 @@ procedure Play_2048 is
          for j in Board(i)'range loop
             declare
                Cell : Natural renames Board(i)(j);
-               Sprite_Offset : constant Natural := Natural (if Cell = 0 then 0.0
-                                                            else Log (X    => Float (Cell),
-                                                                      Base => 2.0));
+               Sprite_Offset : constant Natural :=
+                 Natural (if Cell = 0 then 0.0
+                          else Log (X    => Float (Cell),
+                                    Base => 2.0));
             begin
                Sprite.setTextureRect(Tile_Sprite,
-                                     (Sprite_Offset * Tile_Size, 0, Tile_Size, Tile_Size));
+                                     (left   => Sprite_Offset * Tile_Size,
+                                      top    => 0,
+                                      width  => Tile_Size,
+                                      height => Tile_Size));
 
                Sprite.setPosition(Tile_Sprite,
                                   (x => Margin + Float ((j - 1) * Tile_Size),
@@ -277,7 +282,8 @@ procedure Play_2048 is
                                             Ada.Strings.Left) & "/");
 
    function Next_Theme return t_Theme is
-     (if Theme + 1 > t_Theme'Last or else not Ada.Directories.Exists (Theme_Path (Theme + 1))
+     (if Theme + 1 > t_Theme'Last or else
+        not Ada.Directories.Exists (Theme_Path (Theme + 1))
       then t_Theme'First
       else Theme + 1);
 
@@ -317,13 +323,14 @@ procedure Play_2048 is
 
       RenderWindow.setIcon
         (renderWindow => App_Win,
-         width => Image.getSize (Icon).x,
-         height => Image.getSize (Icon).y,
-         pixels => Image.getPixelsPtr (Icon));
+         width        => Image.getSize (Icon).x,
+         height       => Image.getSize (Icon).y,
+         pixels       => Image.getPixelsPtr (Icon));
 
    end Load_Theme;
 
-   function To_Direction (Keystroke : t_Direction_Key) return Game.t_Direction is
+   function To_Direction (Keystroke : t_Direction_Key) return Game.t_Direction
+   is
      (case Keystroke is
          when Left    => Game.Left,
          when Right   => Game.Right,
@@ -393,8 +400,9 @@ begin
                         if Game."=" (State.Game_Status, Game.Playing) then
 
                            Game.Move
-                             (Direction =>
-                                To_Direction (Get_Keystroke (Key_Code => App_Event.key.code)),
+                             (Direction => To_Direction
+                                (Get_Keystroke
+                                   (Key_Code => App_Event.key.code)),
                               State     => State,
                               New_State => New_State);
 

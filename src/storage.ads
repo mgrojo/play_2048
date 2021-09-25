@@ -14,10 +14,10 @@ package Storage is
      (Game_State : out Game.t_Board_State);
 
    procedure Save_State
-     (Best_Score : Natural;
-      Best_Time : Duration;
+     (Best_Score      : Natural;
+      Best_Time       : Duration;
       Fullscreen_Mode : Boolean;
-      Theme : Natural;
-      Game_State : Game.t_Board_State);
+      Theme           : Natural;
+      Game_State      : Game.t_Board_State);
 
 end Storage;

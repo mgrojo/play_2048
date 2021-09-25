@@ -11,13 +11,13 @@ package body Storage is
    use TOML;
    use type Ada.Calendar.Time;
 
-   Best_Score_Key : constant String := "best_score";
+   Best_Score_Key      : constant String := "best_score";
    Fullscreen_Mode_Key : constant String := "fullscreen_mode";
-   Theme_Key : constant String := "theme_id";
-   Board_State_Key : constant String := "board_state";
-   Score_Key : constant String := "score";
-   Elapsed_Key : constant String := "elapsed";
-   Best_Elapsed_Key : constant String := "best_elapsed";
+   Theme_Key           : constant String := "theme_id";
+   Board_State_Key     : constant String := "board_state";
+   Score_Key           : constant String := "score";
+   Elapsed_Key         : constant String := "elapsed";
+   Best_Elapsed_Key    : constant String := "best_elapsed";
 
    -- In Unix-like OS, save the configuration file as dot-file in the
    -- home as usual.  In others, save in current directory.
@@ -86,7 +86,7 @@ package body Storage is
    -- be good as an initial Best Time to beat.
    --
    function Best_Time return Duration is
-     (Duration (Get_Float (Key => Best_Elapsed_Key,
+     (Duration (Get_Float (Key     => Best_Elapsed_Key,
                            Default => Valid_Float
                              (Ada.Calendar.Day_Duration'Last - 1.0))));
 
@@ -204,7 +204,7 @@ package body Storage is
          Config := Create_Table;
       end if;
 
-      Config.Set (Key => Best_Score_Key,
+      Config.Set (Key         => Best_Score_Key,
                   Entry_Value => Create_Integer (Any_Integer (Best_Score)));
 
       Config.Set (Key         => Best_Elapsed_Key,
@@ -213,10 +213,10 @@ package body Storage is
                       Value => Valid_Float (Best_Time))));
 
 
-      Config.Set (Key => Fullscreen_Mode_Key,
+      Config.Set (Key         => Fullscreen_Mode_Key,
                   Entry_Value => Create_Boolean (Fullscreen_Mode));
 
-      Config.Set (Key => Theme_Key,
+      Config.Set (Key         => Theme_Key,
                   Entry_Value => Create_Integer (Any_Integer (Theme)));
 
       Board_State_Value := Create_Array (Item_Kind => TOML_Array);
@@ -229,17 +229,19 @@ package body Storage is
          end loop;
       end loop;
 
-      Config.Set (Key => Board_State_Key,
+      Config.Set (Key         => Board_State_Key,
                   Entry_Value => Board_State_Value);
 
-      Config.Set (Key => Score_Key,
-                  Entry_Value => Create_Integer (Any_Integer (Game_State.Score)));
+      Config.Set (Key         => Score_Key,
+                  Entry_Value =>
+                    Create_Integer (Any_Integer (Game_State.Score)));
 
-      Config.Set (Key => Elapsed_Key,
+      Config.Set (Key         => Elapsed_Key,
                   Entry_Value => Create_Float
-                    ((Kind => Regular,
+                    ((Kind  => Regular,
                       Value => Valid_Float
-                        (Ada.Calendar."-" (Ada.Calendar.Clock, Game_State.Start_Time)))));
+                        (Ada.Calendar."-" (Ada.Calendar.Clock,
+                                           Game_State.Start_Time)))));
 
       TOML.File_IO.Dump_To_File (Config, File);
 

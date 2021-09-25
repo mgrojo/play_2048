@@ -16,10 +16,10 @@ package body Game is
 
    procedure Reset_Game (State : out t_Board_State) is
    begin
-      State := (Board      => (others => (others => 0)),
-                Blanks     => t_Cell_Count'Last,
-                Score      => 0,
-                Start_Time => Ada.Calendar.Clock,
+      State := (Board       => (others => (others => 0)),
+                Blanks      => t_Cell_Count'Last,
+                Score       => 0,
+                Start_Time  => Ada.Calendar.Clock,
                 Game_Status => Playing);
    end Reset_Game;
 
@@ -35,12 +35,14 @@ package body Game is
 
    function Has_No_Move (State : t_Board_State) return Boolean is
      (State.Blanks = 0
-        and then (for all Row in t_Board_Size =>
-                    (for all Column in 1 .. t_Board_Size'Last - 1 =>
-                       (State.Board(Row)(Column) /= State.Board(Row)(Column+1))))
-        and then (for all Row in 1 .. t_Board_Size'Last - 1 =>
-                    (for all Column in t_Board_Size =>
-                       (State.Board(Row)(Column) /= State.Board(Row+1)(Column)))));
+        and then
+        (for all Row in t_Board_Size =>
+           (for all Column in 1 .. t_Board_Size'Last - 1 =>
+              (State.Board(Row)(Column) /= State.Board(Row)(Column+1))))
+        and then
+        (for all Row in 1 .. t_Board_Size'Last - 1 =>
+           (for all Column in t_Board_Size =>
+              (State.Board(Row)(Column) /= State.Board(Row+1)(Column)))));
 
    procedure Update_Status (State : in out t_Board_State) is
    begin
@@ -79,7 +81,8 @@ package body Game is
       State     : t_Board_State;
       New_State : out t_Board_State) is
 
-      -- Moving and merging will always be performed leftward, hence the following transforms
+      -- Moving and merging will always be performed leftward, hence
+      -- the following transforms
       function Flip_Row (What : in t_Row) return t_Row is
          i : Natural := 0;
       begin
@@ -113,8 +116,9 @@ package body Game is
          end return;
       end Transpose;
 
-      -- For moving/merging, recursive expression functions will be used, but they
-      -- can't contain statements, hence the following sub-function used by Merge
+      -- For moving/merging, recursive expression functions will be
+      -- used, but they can't contain statements, hence the following
+      -- sub-function used by Merge
       function Add_Blank (Delta_Score : in Natural) return t_List is
       begin
          New_State.Blanks := New_State.Blanks+1;
@@ -131,7 +135,8 @@ package body Game is
       function Merge (What : in t_List) return t_List is
         (if What'Length <= 1 or else What(What'First) = 0 then What
          elsif What(What'First) = What(What'First+1)
-         then (1 => 2*What(What'First)) & Merge(What(What'First+2..What'Last)) & Add_Blank(What(What'First))
+         then (1 => 2*What(What'First)) & Merge(What(What'First+2..What'Last))
+            & Add_Blank(What(What'First))
          else (1 => What(What'First)) & Merge(What(What'First+1..What'Last)));
 
       function Move (What : in t_Board) return t_Board is
