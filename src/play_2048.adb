@@ -100,6 +100,11 @@ procedure Play_2048 is
      "F11: fullscreen" & ASCII.LF &
      "Tab: next theme";
 
+   Text_Color  : constant sfColor :=
+     (R => 196, G => 160, B => 0, A => 255);
+   Value_Color : constant sfColor :=
+     (R => 136, G => 138, B => 133, A => 255);
+
    Fullscreen : Boolean := Storage.Fullscreen_Mode;
    Theme      : t_Theme := t_theme (Storage.Theme);
 
@@ -130,38 +135,55 @@ procedure Play_2048 is
       Best_Time_Image  : constant String := Ada.Calendar.Formatting.Image
         (Elapsed_Time => Best_Time);
 
-      Score_Length : constant := 10;
+      Line_Spacing : constant Float :=
+        Font.getLineSpacing
+           (Game_Font,
+            characterSize => Text.getCharacterSize (Score_Text));
 
-      Best_Score_Image : constant String :=
-        Move (Value   => Best_Score'Image,
-              Length  => Score_Length,
-              Justify => Ada.Strings.Center);
-      Score_Image      : constant String :=
-        Move (Value   => State.Score'Image,
-              Length  => Score_Length,
-              Justify => Ada.Strings.Center);
+      -- Y coordinate for the text, which will be incremented.
+      Y : Float := Margin;
 
-      use ASCII;
+      procedure Draw_Text
+        (Message  : in String;
+         Is_Value : in Boolean) is
+
+         Spacing_Factor : constant Float := (if Is_Value then 1.5 else 1.0);
+      begin
+
+         if Is_Value then
+            Text.setFillColor (Score_Text, Value_Color);
+         else
+            Text.setFillColor (Score_Text, Text_Color);
+         end if;
+
+         Text.setString (Score_Text, Message);
+         Text.setPosition (Score_Text,
+                           (x => Width - Margin -
+                              Text.getLocalBounds (Score_Text).width,
+                            y => Y));
+         RenderWindow.drawText (App_Win, Score_Text);
+
+         Y := Y + Spacing_Factor * Line_Spacing;
+      end Draw_Text;
+
    begin
 
       if Text_UI then
 
-         Put_Line("Score =" & Score_Image &
+         Put_Line("Score =" & State.Score'Image &
                     "  Time = " & Elapsed_Time &
-                    "  Best Score =" & Best_Score_Image &
+                    "  Best Score =" & Best_Score'Image &
                     "  Best Time = " & Best_Time_Image);
       end if;
 
-      Text.setString (Score_Text,
-                      "Score" & LF & Score_Image & LF & LF &
-                        "Best score" & LF & Best_Score_Image & LF & LF &
-                        "Time" & LF & " " & Elapsed_Time & LF & LF &
-                        "Best time" & LF & " " & Best_Time_Image);
-      Text.setPosition (Score_Text,
-                        (x => Pane_Center -
-                           Text.getLocalBounds (Score_Text).width / 2.0,
-                         y => Margin));
-      RenderWindow.drawText (App_Win, Score_Text);
+      Draw_Text ("Score", Is_Value => False);
+      Draw_Text (State.Score'Image, Is_Value => True);
+      Draw_Text ("Best Score", Is_Value => False);
+      Draw_Text (Best_Score'Image, Is_Value => True);
+      Draw_Text ("Time", Is_Value => False);
+      Draw_Text (Elapsed_Time, Is_Value => True);
+      Draw_Text ("Best time", Is_Value => False);
+      Draw_Text (Best_Time_Image, Is_Value => True);
 
    end Draw_Scoreboard;
 
@@ -348,8 +370,12 @@ begin
 
    Load_Theme;
 
+   -- Adjust Game Text or Score Text according to the board side length
    if Game.Board_Length >= Game.Default_Length then
       Text.setCharacterSize (Game_Text, Text.getCharacterSize (Game_Text) * 2);
+   else
+      Text.setCharacterSize (Score_Text,
+                             sfUint32 (Float (Text.getCharacterSize (Score_Text)) * 0.75));
    end if;
 
    Best_Score := Storage.Best_Score;
