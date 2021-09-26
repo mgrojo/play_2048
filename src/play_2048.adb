@@ -294,14 +294,23 @@ procedure Play_2048 is
    end Set_Text_Style;
 
    function Theme_Path (Theme_Id : t_theme) return String is
-     (-- Use the APPDIR env var if defined. In this way we allow
-      -- running from an AppImage and still find the resource files.
+      -- If running inside our AppImage, use the APPDIR env var. In
+      -- this way we allow running from an AppImage and still find the
+      -- resource files.
       --
-      (if Ada.Environment_Variables.Exists ("APPDIR") then
-          Ada.Environment_Variables.Value ("APPDIR") & "/"
-       else "") &
+      App_Dir : constant String :=
+        (if Ada.Environment_Variables.Exists ("APPIMAGE") and then
+           Ada.Strings.Fixed.Index (Ada.Environment_Variables.Value ("APPIMAGE"),
+                                    "Play_2048") > 0 and then
+            Ada.Environment_Variables.Exists ("APPDIR")
+         then
+            Ada.Environment_Variables.Value ("APPDIR") & "/"
+         else "");
+   begin
+      return App_Dir &
         "themes/" & Ada.Strings.Fixed.Trim (Theme_Id'Image,
-                                            Ada.Strings.Left) & "/");
+                                            Ada.Strings.Left) & "/";
+   end Theme_Path;
 
    function Next_Theme return t_Theme is
      (if Theme + 1 > t_Theme'Last or else
