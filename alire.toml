@@ -1,6 +1,6 @@
 name = "play_2048"
-description = "2048 game: merge equal tiles until you add up to 2048"
-version = "0.0.0"
+description = "2048 game: merge tiles with the same number until you add up to 2048"
+version = "1.0.0"
 
 authors = ["Manuel Gomez"]
 maintainers = ["Manuel Gomez <mgrojo@gmail.com>"]
