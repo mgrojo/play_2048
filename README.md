@@ -1,5 +1,5 @@
 [![Build](https://github.com/mgrojo/play_2048/actions/workflows/main.yml/badge.svg)](https://github.com/mgrojo/play_2048/actions/workflows/main.yml)
-
+[![Alire](https://img.shields.io/endpoint?url=https://alire.ada.dev/badges/play_2048.json)](https://alire.ada.dev/crates/play_2048.html)
 ![Screenshot of Play 2048!](/images/screenshot_linux_4x4.png)
 
 This is yet another implementation of the [2048
@@ -27,7 +27,7 @@ structure.
 
 - Install [Alire](https://alire.ada.dev/)
 - Build using `alr build`. All the dependencies are installed and managed by Alire.
-- Run using `alr run` (mandatory in Windows so it find installed libraries) or
+- Run using `alr run` (mandatory in Windows so it finds installed libraries) or
   directly from the working directory: `./play_2048` (Linux only).
 
 # How to play
