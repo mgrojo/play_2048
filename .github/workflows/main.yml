@@ -30,6 +30,8 @@ jobs:
        - name: Update apt
          if: runner.os == 'Linux'
          run: sudo apt-get update
+       - name: Update
+         run: alr index --update-all
        - name: Build
          run: alr --non-interactive build
          
@@ -48,6 +50,8 @@ jobs:
          uses: alire-project/setup-alire@v1
        - name: Update apt
          run: sudo apt-get update
+       - name: Update
+         run: alr index --update-all
        - name: Build
          run: alr --non-interactive build
        - name: Build AppImage
