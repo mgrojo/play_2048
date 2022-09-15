@@ -4,7 +4,7 @@ DESTDIR = /opt/$(MAIN)
 .PHONY: all install AppImage
 
 all:
-	alr build --no-tty
+	alr build
 
 install: all
 	mkdir -p $(DESTDIR)
