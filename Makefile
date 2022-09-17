@@ -8,7 +8,7 @@ all:
 
 install: all
 	mkdir -p $(DESTDIR)/bin
-	cp -rp $(MAIN).desktop $(MAIN) themes $(DESTDIR)
+	cp -rp $(MAIN).desktop themes $(DESTDIR)
 	cp -p bin/$(MAIN) $(DESTDIR)/bin
 	cp -p themes/1/icon.png $(DESTDIR)/$(MAIN).png
 
