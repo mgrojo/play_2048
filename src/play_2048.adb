@@ -347,8 +347,10 @@ procedure Play_2048 is
       Sprite.setTexture (Game_Sprite, Game_Image);
 
       Set_Text_Style (Score_Text);
+
       -- Not available in v2.4:
-      -- Text.setLineSpacing (Score_Text, 0.85);
+      Text.setLineSpacing (Score_Text, 0.85);
+
       Set_Text_Style (Game_Text);
 
       RenderWindow.setIcon
