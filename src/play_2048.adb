@@ -16,7 +16,6 @@ with Ada.Numerics.Elementary_Functions; use Ada.Numerics.Elementary_Functions;
 with Ada.Command_Line;
 with Ada.Strings.Fixed;
 with Ada.Directories;
-with Ada.Environment_Variables;
 with Ada.Calendar.Formatting;
 
 with Storage;
@@ -211,10 +210,6 @@ procedure Play_2048 is
          (Move (Value, Length => 4, Justify => Ada.Strings.Center));
 
       Board : Game.t_Board renames State.Board;
-      Elapsed_Time : constant string := Ada.Calendar.Formatting.Image
-        (Elapsed_Time => Game.Elapsed_Time (State));
-      Best_Time_Image : constant String := Ada.Calendar.Formatting.Image
-        (Elapsed_Time => Best_Time);
    begin
       if Text_UI then
          Put_Line (Horizontal_Rule);
@@ -294,21 +289,24 @@ procedure Play_2048 is
    end Set_Text_Style;
 
    function Theme_Path (Theme_Id : t_theme) return String is
-      -- If running inside our AppImage, use the APPDIR env var. In
-      -- this way we allow running from an AppImage and still find the
+
+      Self_Exe : constant String := "/proc/self/exe";
+      -- Get the resources path through the directory where the program is
+      -- located.
+      -- In this way we allow running from an AppImage and still find the
       -- resource files.
       --
       App_Dir : constant String :=
-        (if Ada.Environment_Variables.Exists ("APPIMAGE") and then
-           Ada.Strings.Fixed.Index (Ada.Environment_Variables.Value ("APPIMAGE"),
-                                    "Play_2048") > 0 and then
-            Ada.Environment_Variables.Exists ("APPDIR")
+        (if Ada.Directories.Exists (Self_Exe)
          then
-            Ada.Environment_Variables.Value ("APPDIR") & "/"
-         else "");
+            Ada.Directories.Containing_Directory
+              (Ada.Directories.Containing_Directory
+                 (Ada.Directories.Full_Name (Self_Exe)))
+         else
+            "");
    begin
       return App_Dir &
-        "themes/" & Ada.Strings.Fixed.Trim (Theme_Id'Image,
+        "/themes/" & Ada.Strings.Fixed.Trim (Theme_Id'Image,
                                             Ada.Strings.Left) & "/";
    end Theme_Path;
 
