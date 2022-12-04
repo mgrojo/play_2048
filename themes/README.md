@@ -7,7 +7,7 @@ have this structure:
 - `icon.png`: 128x128 image for the icon and on-screen logo.
 - `font.ttf`: font used for the on-screen texts.
 
-Fonts have their own license. Graphics are release under the same license than the game itself.
+Fonts have their own license. Graphics are released under the same license as the game itself.
 
 Included themes (tile images are displayed):
 1. Default for this clone of 2048
