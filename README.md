@@ -1,6 +1,9 @@
 [![Build](https://github.com/mgrojo/play_2048/actions/workflows/main.yml/badge.svg)](https://github.com/mgrojo/play_2048/actions/workflows/main.yml)
 [![Alire](https://img.shields.io/endpoint?url=https://alire.ada.dev/badges/play_2048.json)](https://alire.ada.dev/crates/play_2048.html)
+[![Download][download-img]][download]
+[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/ada-lang/Lobby)
 ![Screenshot of Play 2048!](/images/screenshot_linux_4x4.png)
+
 
 This is yet another implementation of the [2048
 game](https://github.com/gabrielecirulli/2048), implemented in Ada
@@ -61,3 +64,7 @@ rewritten.
 
 Fonts used in the themes: Noto Serif (SIL Open Font License) for Theme
 5 and DeJa Vu Sans (MIT License) for the rest.
+
+
+  [download-img]: https://img.shields.io/github/downloads/mgrojo/play_2048/total.svg
+  [download]: https://github.com/mgrojo/play_2048/releases
