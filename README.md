@@ -2,6 +2,7 @@
 [![Alire](https://img.shields.io/endpoint?url=https://alire.ada.dev/badges/play_2048.json)](https://alire.ada.dev/crates/play_2048.html)
 [![Download][download-img]][download]
 [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/ada-lang/Lobby)
+[![Mentioned in Awesome Ada](https://awesome.re/mentioned-badge.svg)](https://github.com/ohenley/awesome-ada)
 ![Screenshot of Play 2048!](/images/screenshot_linux_4x4.png)
 
 
