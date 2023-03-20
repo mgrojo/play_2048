@@ -7,9 +7,7 @@ all:
 	alr build
 
 install: all
-	mkdir -p $(DESTDIR)/bin
-	cp -rp $(MAIN).desktop themes $(DESTDIR)
-	cp -p bin/$(MAIN) $(DESTDIR)/bin
+	alr exec -P -- gprinstall --prefix=$(DESTDIR) --create-missing-dirs --mode=usage -f
 	cp -p themes/1/icon.png $(DESTDIR)/$(MAIN).png
 
 AppImage:
