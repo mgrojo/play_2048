@@ -22,4 +22,8 @@ project Play_2048 is
          "-O2");
    end Compiler;
 
+   package Install is
+      for Artifacts (".") use ("themes", "play_2048.desktop");
+   end Install;
+
 end Play_2048;
