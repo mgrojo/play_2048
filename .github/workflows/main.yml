@@ -1,4 +1,4 @@
-# Build using Alire. 
+# Build using Alire and deliver an AppImage. 
 name: Build
 
 on:
@@ -28,7 +28,7 @@ jobs:
        - name: alire-project/setup-alire
          uses: alire-project/setup-alire@v2
          with:
-           version: 1.2.1         
+           version: "nightly"      
        - name: Update apt
          if: runner.os == 'Linux'
          run: sudo apt-get update
