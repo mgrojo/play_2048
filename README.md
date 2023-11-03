@@ -34,6 +34,25 @@ structure.
 - Run using `alr run` (mandatory in Windows so it finds installed libraries) or
   directly from the working directory: `./play_2048` (Linux only).
 
+# How to install
+
+The game can be installed using Alire 2.0 with this command:
+```
+alr install
+```
+Refer to Alire documentation on how to add the Alire default installation to the PATH variable
+or how  to change the default installation prefix.
+
+If Alire 2.0 is not available, you can still install the application using something like this:
+```
+sudo make PREFIX=/opt/play_2048 install
+```
+
+If you're interested in building the AppImage file:
+```
+make AppImage
+```
+
 # How to play
 
 Use arrow keys to move tiles. When two adjacent tiles with the same number are merged, their numbers
