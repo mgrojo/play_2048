@@ -27,8 +27,6 @@ jobs:
            target: native
        - name: alire-project/setup-alire
          uses: alire-project/setup-alire@v2
-         with:
-           version: "nightly"      
        - name: Update apt
          if: runner.os == 'Linux'
          run: sudo apt-get update
