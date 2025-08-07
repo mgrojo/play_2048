@@ -1,4 +1,4 @@
-# Build using Alire and deliver an AppImage. 
+# Build using Alire and deliver a Windows Exe and a Linux AppImage. 
 name: Build
 
 on:
@@ -34,10 +34,19 @@ jobs:
          run: alr index --update-all
        - name: Build
          run: alr --non-interactive build
+       - name: Create Release
+         uses: ncipollo/release-action@v1
+         with:
+           allowUpdates: True
+           tag: continuous
+           name: Continuous build
+           prerelease: True
+           artifacts: "bin/play_2048.exe"
+           token: ${{ secrets.GITHUB_TOKEN }}
          
   release:
     name: Continuous AppImage
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:    
        - name: Checkout
          uses: actions/checkout@v2
@@ -65,5 +74,5 @@ jobs:
            tag: continuous
            name: Continuous build
            prerelease: True
-           artifacts: "Play_2048*.AppImage"
+           artifacts: "Play_2048*.AppImage,bin/play_2048.exe"
            token: ${{ secrets.GITHUB_TOKEN }}
