@@ -41,7 +41,7 @@ jobs:
            tag: continuous
            name: Continuous build
            prerelease: True
-           artifacts: "bin/play_2048.exe"
+           artifacts: "bin/play_2048.exe,themes/"
            token: ${{ secrets.GITHUB_TOKEN }}
          
   release:
