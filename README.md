@@ -1,3 +1,4 @@
+[![Ada](https://img.shields.io/badge/-inside-green?logo=ada&logoColor=white&labelColor=grey&logoSize=auto)](https://ada-lang.io/)
 [![Build](https://github.com/mgrojo/play_2048/actions/workflows/main.yml/badge.svg)](https://github.com/mgrojo/play_2048/actions/workflows/main.yml)
 [![Alire](https://img.shields.io/endpoint?url=https://alire.ada.dev/badges/play_2048.json)](https://alire.ada.dev/crates/play_2048.html)
 [![Alire CI/CD](https://img.shields.io/endpoint?url=https://alire-crate-ci.ada.dev/badges/play_2048.json)](https://alire-crate-ci.ada.dev/crates/play_2048.html)
