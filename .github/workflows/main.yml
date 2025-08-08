@@ -26,7 +26,7 @@ jobs:
            distrib: community
            target: native
        - name: alire-project/setup-alire
-         uses: alire-project/setup-alire@v2
+         uses: alire-project/setup-alire@v5
        - name: Update apt
          if: runner.os == 'Linux'
          run: sudo apt-get update
@@ -34,6 +34,8 @@ jobs:
          run: alr index --update-all
        - name: Build
          run: alr --non-interactive build
+       - name: Install
+         run: alr --non-interactive install --prefix=play_2048_folder
        - name: Create Release
          uses: ncipollo/release-action@v1
          with:
@@ -41,7 +43,7 @@ jobs:
            tag: continuous
            name: Continuous build
            prerelease: True
-           artifacts: "bin/play_2048.exe,themes/"
+           artifacts: "play_2048_folder/*"
            token: ${{ secrets.GITHUB_TOKEN }}
          
   release:
@@ -74,5 +76,5 @@ jobs:
            tag: continuous
            name: Continuous build
            prerelease: True
-           artifacts: "Play_2048*.AppImage,bin/play_2048.exe"
+           artifacts: "Play_2048*.AppImage"
            token: ${{ secrets.GITHUB_TOKEN }}
