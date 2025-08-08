@@ -36,6 +36,17 @@ jobs:
          run: alr --non-interactive build
        - name: Install
          run: alr --non-interactive install --prefix=play_2048_folder
+
+       # On Windows, install zip as it is not available by default
+       - name: Install zip (Windows)
+         if: matrix.platform.os == 'windows-latest'
+         run: choco install zip
+
+       - name: Package binaries
+         shell: bash
+         run: |
+           zip play_2048-${{ matrix.platform.id }}.zip play_2048_folder/*
+
        - name: Create Release
          uses: ncipollo/release-action@v1
          with:
@@ -43,9 +54,9 @@ jobs:
            tag: continuous
            name: Continuous build
            prerelease: True
-           artifacts: "play_2048_folder/*"
+           artifacts: "play_2048-${{ matrix.platform.id }}.zip"
            token: ${{ secrets.GITHUB_TOKEN }}
-         
+
   release:
     name: Continuous AppImage
     runs-on: ubuntu-22.04
