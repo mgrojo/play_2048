@@ -45,7 +45,7 @@ jobs:
        - name: Package binaries
          shell: bash
          run: |
-           zip play_2048-${{ matrix.platform.id }}.zip play_2048_folder/*
+           zip -r play_2048-${{ runner.os }}.zip play_2048_folder/
 
        - name: Create Release
          uses: ncipollo/release-action@v1
@@ -54,7 +54,7 @@ jobs:
            tag: continuous
            name: Continuous build
            prerelease: True
-           artifacts: "play_2048-${{ matrix.platform.id }}.zip"
+           artifacts: "play_2048-${{ runner.os }}.zip"
            token: ${{ secrets.GITHUB_TOKEN }}
 
   release:
