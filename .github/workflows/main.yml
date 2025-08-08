@@ -1,4 +1,5 @@
-# Build using Alire and deliver an AppImage. 
+# Build using Alire and deliver an executable artifact for Windows, Linux and macOS.
+# For Linux, an AppImage is also delivered.
 name: Build
 
 on:
@@ -15,18 +16,19 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        os: [windows-latest, ubuntu-latest, macos-latest]
 
     steps:    
        - name: Checkout
          uses: actions/checkout@v2
        - name: ada-actions/toolchain
+         if: runner.os == 'Windows' # This is needed on Windows, but failing on macos. Not needed nor failing on Linux
          uses: ada-actions/toolchain@ce2021
          with:
            distrib: community
-           target: native
+           target: native         
        - name: alire-project/setup-alire
-         uses: alire-project/setup-alire@v2
+         uses: alire-project/setup-alire@v5
        - name: Update apt
          if: runner.os == 'Linux'
          run: sudo apt-get update
@@ -34,10 +36,32 @@ jobs:
          run: alr index --update-all
        - name: Build
          run: alr --non-interactive build
-         
+       - name: Install
+         run: alr --non-interactive install --prefix=play_2048_folder
+
+       # On Windows, install zip as it is not available by default
+       - name: Install zip (Windows)
+         if: runner.os == 'Windows'
+         run: choco install zip
+
+       - name: Package binaries
+         shell: bash
+         run: |
+           zip -r play_2048-${{ runner.os }}.zip play_2048_folder/
+
+       - name: Create Release
+         uses: ncipollo/release-action@v1
+         with:
+           allowUpdates: True
+           tag: continuous
+           name: Continuous build
+           prerelease: True
+           artifacts: "play_2048-${{ runner.os }}.zip"
+           token: ${{ secrets.GITHUB_TOKEN }}
+
   release:
     name: Continuous AppImage
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:    
        - name: Checkout
          uses: actions/checkout@v2
