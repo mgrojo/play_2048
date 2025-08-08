@@ -39,7 +39,7 @@ jobs:
 
        # On Windows, install zip as it is not available by default
        - name: Install zip (Windows)
-         if: matrix.platform.os == 'windows-latest'
+         if: runner.os == 'Windows'
          run: choco install zip
 
        - name: Package binaries
