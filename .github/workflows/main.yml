@@ -60,34 +60,14 @@ jobs:
            token: ${{ secrets.GITHUB_TOKEN }}
 
   release:
-    name: Continuous AppImage
-    runs-on: ubuntu-22.04
-    steps:    
+    name: Continuous Packages
+    runs-on: ubuntu-20.04
+    steps:
        - name: Checkout
          uses: actions/checkout@v2
-       - name: ada-actions/toolchain
-         uses: ada-actions/toolchain@ce2021
+       - name: alr2appimage-action
+         uses: mgrojo/alr2appimage-action@v1
          with:
-           distrib: community
-           target: native
-       - name: alire-project/setup-alire
-         uses: alire-project/setup-alire@v1
-         with:
-           version: 1.2.1                
-       - name: Update apt
-         run: sudo apt-get update
-       - name: Update
-         run: alr index --update-all
-       - name: Build
-         run: alr --non-interactive build
-       - name: Build AppImage
-         run: VERSION=${GITHUB_BASE_REF:-${GITHUB_REF#refs/heads/}} make AppImage
-       - name: Create Release
-         uses: ncipollo/release-action@v1
-         with:
-           allowUpdates: True
-           tag: continuous
-           name: Continuous build
-           prerelease: True
-           artifacts: "Play_2048*.AppImage"
-           token: ${{ secrets.GITHUB_TOKEN }}
+           alr2appimageArgs: "-o appimage,deb,rpm --use-version" # Arguments to pass to alr2appimage
+           tagName: "continuous" # Tag to use for your application release.
+           deleteExistent: true # Delete the tag and release if already existent
