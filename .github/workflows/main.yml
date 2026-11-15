@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [windows-latest, ubuntu-24.04, macos-latest]
 
     steps:    
        - name: Checkout
@@ -61,7 +61,7 @@ jobs:
 
   release:
     name: Continuous Packages
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
        - name: Checkout
          uses: actions/checkout@v2
