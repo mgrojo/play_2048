@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-2022, ubuntu-24.04, macos-14]
+        os: [ubuntu-24.04, macos-14]
 
     steps:    
        - name: Checkout
@@ -68,6 +68,7 @@ jobs:
        - name: alr2appimage-action
          uses: mgrojo/alr2appimage-action@v1
          with:
-           alr2appimageArgs: "-o appimage,deb,rpm --use-version" # Arguments to pass to alr2appimage
+           alr2appimageVersion: 1.1.1
+           alr2appimageArgs: "-o appimage,deb,rpm --use-version --terminal --single-exe"
            tagName: "continuous" # Tag to use for your application release.
            deleteExistent: true # Delete the tag and release if already existent
